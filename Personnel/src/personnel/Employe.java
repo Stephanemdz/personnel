@@ -2,6 +2,7 @@ package personnel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 /**
  * Employé d'une ligue hébergée par la M2L. Certains peuvent 
@@ -20,7 +21,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
 	
-	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee)
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -29,7 +30,7 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.mail = mail;
 		this.ligue = ligue;
 		this.dateArrivee = dateArrivee;
-		this.dateDepart = null;
+		this.dateDepart = dateDepart;
 	}
 	
 	/**
@@ -128,9 +129,22 @@ public class Employe implements Serializable, Comparable<Employe>
 		return dateDepart;
 	}
 	
-	public void setDateDepart(LocalDate dateDepart) {
-		this.dateArrivee = dateDepart;
-	}
+	 public void setDateDepart(String dateDepartStr) throws IllegalArgumentException {
+	        if (dateDepartStr == null || dateDepartStr.isEmpty()) {
+	            this.dateDepart = null; // Autoriser une date de départ nulle
+	            return;
+	        }
+
+	        try {
+	            LocalDate dateDepart = LocalDate.parse(dateDepartStr);
+	            if (dateDepart.isBefore(this.dateArrivee)) {
+	                throw new IllegalArgumentException("La date de départ doit être postérieure ou égale à la date d'arrivée.");
+	            }
+	            this.dateDepart = dateDepart;
+	        } catch (DateTimeParseException e) {
+	            throw new IllegalArgumentException("Format de date invalide (AAAA-MM-JJ) : " + dateDepartStr, e);
+	        }
+	    }
 
 	/**
 	 * Retourne vrai ssi le password passé en paramètre est bien celui
