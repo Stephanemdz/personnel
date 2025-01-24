@@ -1,6 +1,7 @@
 package personnel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Employé d'une ligue hébergée par la M2L. Certains peuvent 
@@ -14,10 +15,12 @@ public class Employe implements Serializable, Comparable<Employe>
 {
 	private static final long serialVersionUID = 4795721718037994734L;
 	private String nom, prenom, password, mail;
+	private LocalDate dateArrivee;
+	private LocalDate dateDepart;
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
 	
-	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password)
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -25,6 +28,8 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.password = password;
 		this.mail = mail;
 		this.ligue = ligue;
+		this.dateArrivee = dateArrivee;
+		this.dateDepart = null;
 	}
 	
 	/**
@@ -110,6 +115,22 @@ public class Employe implements Serializable, Comparable<Employe>
 	{
 		this.mail = mail;
 	}
+	
+	public LocalDate getDateArrivee() {
+		return dateArrivee;
+	}
+	
+	public void setDateArrivee(LocalDate dateArrivee) {
+		this.dateArrivee = dateArrivee;
+	}
+	
+	public LocalDate getDateDepart() {
+		return dateDepart;
+	}
+	
+	public void setDateDepart(LocalDate dateDepart) {
+		this.dateArrivee = dateDepart;
+	}
 
 	/**
 	 * Retourne vrai ssi le password passé en paramètre est bien celui
@@ -174,7 +195,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	@Override
 	public String toString()
 	{
-		String res = nom + " " + prenom + " " + mail + " (";
+		String res = nom + " " + prenom + " " + mail + dateArrivee + " " + dateDepart + " " + " (";
 		if (estRoot())
 			res += "super-utilisateur";
 		else
