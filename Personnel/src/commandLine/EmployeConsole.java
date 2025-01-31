@@ -1,12 +1,16 @@
 package commandLine;
-import java.time.LocalDate;
+
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
 
+import java.util.ArrayList;
+
+import commandLineMenus.List;
 import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 import personnel.Employe;
+import personnel.Ligue;
 
 public class EmployeConsole 
 {
@@ -31,6 +35,8 @@ public class EmployeConsole
 			menu.addBack("q");
 			return menu;
 	}
+	
+	
 
 	private Option changerNom(final Employe employe)
 	{

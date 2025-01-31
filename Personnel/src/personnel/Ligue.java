@@ -34,7 +34,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 		this.id = gestionPersonnel.insert(this); 
 	}
 
-	Ligue(GestionPersonnel gestionPersonnel, int id, String nom)
+	public Ligue(GestionPersonnel gestionPersonnel, int id, String nom)
 	{
 		this.nom = nom;
 		employes = new TreeSet<>();

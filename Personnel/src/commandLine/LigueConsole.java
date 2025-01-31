@@ -6,6 +6,7 @@ import static commandLineMenus.rendering.examples.util.InOut.getString;
 import java.util.ArrayList;
 
 import commandLineMenus.List;
+import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 
@@ -93,6 +94,7 @@ public class LigueConsole
 				);
 	}
 	
+	
 	private Option ajouterEmploye(final Ligue ligue)
 	{
 		return new Option("ajouter un employé", "a",
@@ -110,12 +112,25 @@ public class LigueConsole
 		Menu menu = new Menu("Gérer les employés de " + ligue.getNom(), "e");
 		menu.add(afficherEmployes(ligue));
 		menu.add(ajouterEmploye(ligue));
-		menu.add(modifierEmploye(ligue));
-		menu.add(supprimerEmploye(ligue));
+		menu.add(selectionEmploye(ligue));
 		menu.addBack("q");
 		return menu;
 	}
-
+	
+	private List<Employe> selectionEmploye(final Ligue ligue)
+	{
+		return new List<Employe>("Sélectionner un employe", "e", 
+				() -> new ArrayList<>(ligue.getEmployes()),
+				(element) -> selectEmploye(element)
+				);
+	}
+	Option selectEmploye(Employe employe)
+	{
+			Menu menu = new Menu("Gérer le compte " + employe.getNom(), "c");
+			menu.add(deleteEmploye(employe));
+			menu.addBack("q");
+			return menu;
+	}
 	private List<Employe> supprimerEmploye(final Ligue ligue)
 	{
 		return new List<>("Supprimer un employé", "s", 
@@ -137,9 +152,15 @@ public class LigueConsole
 				);
 	}
 	
+	
 	private Option supprimer(Ligue ligue)
 	{
 		return new Option("Supprimer", "d", () -> {ligue.remove();});
+	}
+	
+	private Option deleteEmploye(Employe employe)
+	{
+		return new Option("Supprimer", "d", () -> {employe.remove();});
 	}
 	
 }
