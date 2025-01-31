@@ -6,15 +6,9 @@ CREATE TABLE compte_employe (
     email VARCHAR(500),
     password CHAR(64),
     date_arrive DATE,
-    date_depart DATE,
-    created_at DATETIME,
-    update_at DATETIME, 
-    delete_at DATETIME
+    date_depart DATE
 );
 CREATE TABLE ligue(
     id_ligue INT(11) PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(255),
-    created_at DATETIME,
-    update_at DATETIME,
-    delete_at DATETIME
+    nom VARCHAR(255)
 );
