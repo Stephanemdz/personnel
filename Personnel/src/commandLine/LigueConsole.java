@@ -121,12 +121,13 @@ public class LigueConsole
 	{
 		return new List<Employe>("Sélectionner un employe", "e", 
 				() -> new ArrayList<>(ligue.getEmployes()),
-				(element) -> selectEmploye(element)
+				(element) -> selectEmploye(element, ligue)
 				);
 	}
-	Option selectEmploye(Employe employe)
+	Option selectEmploye(Employe employe, Ligue ligue)
 	{
 			Menu menu = new Menu("Gérer le compte " + employe.getNom(), "c");
+			menu.add(modifierEmploye(ligue));
 			menu.add(deleteEmploye(employe));
 			menu.addBack("q");
 			return menu;
