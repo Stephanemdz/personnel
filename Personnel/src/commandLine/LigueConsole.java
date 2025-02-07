@@ -80,8 +80,6 @@ public class LigueConsole
         menu.addBack("q");
         return menu;
     }
-	
-	//Menu sélection un administrateur
 	private Menu editerAdmin(Employe employe)
 	{
 		Menu menu = new Menu("Gérer le compte " + employe.getNom(), "c");
@@ -108,7 +106,18 @@ public class LigueConsole
 			);
 	}
 	
-	
+	//Menu sélection un administrateur
+	private Menu selectionnerAdmin(Ligue ligue)
+	{
+		Menu menu = new Menu("Editer " + ligue.getNom());
+		menu.add(afficher(ligue));
+		menu.add(gererEmployes(ligue));
+		menu.add(changerAdministrateur(ligue));
+		menu.add(changerNom(ligue));
+		menu.add(supprimer(ligue));
+		menu.addBack("q");
+		return menu;
+	}
 
 	private Option changerNom(final Ligue ligue)
 	{
@@ -163,29 +172,16 @@ public class LigueConsole
 			menu.addBack("q");
 			return menu;
 	}
-	private List<Employe> supprimerEmploye(final Ligue ligue)
-	{
-		return new List<>("Supprimer un employé", "s", 
-				() -> new ArrayList<>(ligue.getEmployes()),
-				(index, element) -> {element.remove();}
-				);
-	}
 	
 	private List<Employe> changerAdministrateur(final Ligue ligue)
 	{
-		return new List<>("Sélectionner un Administrateur", "m", 
+		return new List<>("Changer l'administrateur", "s", 
 				() -> new ArrayList<>(ligue.getEmployes()),
-				(element) -> editerAdmin(element)
+				(index, element) -> {ligue.setAdministrateur(element);}
 				);
 	}		
 
-	private List<Employe> modifierEmploye(final Ligue ligue)
-	{
-		return new List<>("Modifier un employé", "e", 
-				() -> new ArrayList<>(ligue.getEmployes()),
-				employeConsole.editerEmploye()
-				);
-	}
+
 	
 	
 	private Option supprimer(Ligue ligue)
