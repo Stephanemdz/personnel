@@ -158,7 +158,7 @@ public class LigueConsole
 	
 	private List<Employe> selectionEmploye(final Ligue ligue)
 	{
-		return new List<Employe>("Sélectionner un employe", "e", 
+		return new List<Employe>("Sélectionner un employé", "e", 
 				() -> new ArrayList<>(ligue.getEmployes()),
 				(element) -> selectEmploye(element)
 				);
@@ -181,8 +181,6 @@ public class LigueConsole
 				);
 	}		
 
-
-	
 	
 	private Option supprimer(Ligue ligue)
 	{
