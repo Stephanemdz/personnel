@@ -36,6 +36,24 @@ public class EmployeConsole
 			return menu;
 	}
 	
+	// option pour la modification d'un employé 
+    Option editEmploye(Employe employe)
+    {
+            Menu menu = new Menu("Modifier le compte " + employe.getNom(), "c");
+            menu.add(afficher(employe));
+            menu.add(changerNom(employe));
+            menu.add(changerPrenom(employe));
+            menu.add(changerMail(employe));
+            menu.add(changerPassword(employe));
+            menu.addBack("q");
+            return menu;
+    }
+    
+    ListOption<Employe> editEmploye()
+    {
+        return (employe) -> editEmploye(employe);        
+    }
+	
 	
 
 	private Option changerNom(final Employe employe)
