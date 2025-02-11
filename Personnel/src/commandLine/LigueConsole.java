@@ -1,9 +1,12 @@
 package commandLine;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
 
 import java.util.ArrayList;
+
+import com.mysql.cj.exceptions.DataReadException;
 
 import commandLineMenus.List;
 import commandLineMenus.ListOption;
@@ -106,18 +109,7 @@ public class LigueConsole
 			);
 	}
 	
-	//Menu sélection un administrateur
-	private Menu selectionnerAdmin(Ligue ligue)
-	{
-		Menu menu = new Menu("Editer " + ligue.getNom());
-		menu.add(afficher(ligue));
-		menu.add(gererEmployes(ligue));
-		menu.add(changerAdministrateur(ligue));
-		menu.add(changerNom(ligue));
-		menu.add(supprimer(ligue));
-		menu.addBack("q");
-		return menu;
-	}
+
 
 	private Option changerNom(final Ligue ligue)
 	{
@@ -139,9 +131,31 @@ public class LigueConsole
 		return new Option("ajouter un employé", "a",
 				() -> 
 				{
-					ligue.addEmploye(getString("nom : "), 
-						getString("prenom : "), getString("mail : "), 
-						getString("password : "), LocalDate.now(), null);
+					String nom = getString("nom : ");
+	                String prenom = getString("prenom : ");
+	                String mail = getString("mail : ");
+	                String password = getString("password : ");
+
+	                // Demander la date d'arrivée et de départ à l'utilisateur
+	                String dateArriveeStr = getString("date d'arrivée (format JJ/MM/AAAA) : ");
+	                String dateDepartStr = getString("date de départ (format JJ/MM/AAAA, laisser vide si pas de date) : ");
+	                // Convertir la date en LocalDate
+	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	                LocalDate dateArrivee = LocalDate.parse(dateArriveeStr, formatter);
+
+
+	                try {
+	                    dateArrivee = LocalDate.parse(dateArriveeStr, formatter);
+	                    LocalDate dateDepart = null;
+
+	                    if (!dateDepartStr.isEmpty()) {
+	                        dateDepart = LocalDate.parse(dateDepartStr, formatter);
+	                    }
+
+	                    ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
+	                } catch (DataReadException e) {
+	                    System.out.println("Erreur : Format de date incorrect. Veuillez utiliser le format JJ/MM/AAAA.");
+	                }
 				}
 		);
 	}
@@ -158,7 +172,7 @@ public class LigueConsole
 	
 	private List<Employe> selectionEmploye(final Ligue ligue)
 	{
-		return new List<Employe>("Sélectionner un employé", "e", 
+		return new List<Employe>("Sélectionner un employe", "e", 
 				() -> new ArrayList<>(ligue.getEmployes()),
 				(element) -> selectEmploye(element)
 				);
@@ -175,12 +189,14 @@ public class LigueConsole
 	
 	private List<Employe> changerAdministrateur(final Ligue ligue)
 	{
-		return new List<>("Changer l'administrateur", "s", 
+		return new List<>("Changer l'administrateur", "i", 
 				() -> new ArrayList<>(ligue.getEmployes()),
 				(index, element) -> {ligue.setAdministrateur(element);}
 				);
 	}		
 
+
+	
 	
 	private Option supprimer(Ligue ligue)
 	{
