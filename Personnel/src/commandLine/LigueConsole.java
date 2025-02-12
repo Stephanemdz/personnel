@@ -1,6 +1,7 @@
 package commandLine;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
 
@@ -139,8 +140,27 @@ public class LigueConsole
 	                // Demander la date d'arrivée et de départ à l'utilisateur
 	                String dateArriveeStr = getString("date d'arrivée (format JJ/MM/AAAA) : ");
 	                String dateDepartStr = getString("date de départ (format JJ/MM/AAAA, laisser vide si pas de date) : ");
+	             // Convertir la date en LocalDate
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                    try {
+                        LocalDate dateArrivee = LocalDate.parse(dateArriveeStr, formatter); // Parse dateArrivee *before* the if block
+                        LocalDate dateDepart = null;
+
+                        if (!dateDepartStr.isEmpty()) {
+                            dateDepart = LocalDate.parse(dateDepartStr, formatter);
+                        }
+
+                        ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
+                    } catch (DateTimeParseException e) { // Catch the correct exception
+                        System.out.println("Erreur : Format de date incorrect. Veuillez utiliser le format JJ/MM/AAAA.");
+                        // Gérer l'erreur, par exemple en demandant à l'utilisateur de ressaisir la date
+                        return; // Or throw the exception, or take other appropriate action.
+                    } catch (DataReadException e) { // If you still need to catch DataReadException
+                        // ... handle DataReadException ...
+                    }
 	                // Convertir la date en LocalDate
-	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	                DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	                LocalDate dateArrivee = LocalDate.parse(dateArriveeStr, formatter);
 
 
