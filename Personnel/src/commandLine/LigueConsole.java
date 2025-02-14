@@ -149,6 +149,10 @@ public class LigueConsole
 
                         if (!dateDepartStr.isEmpty()) {
                             dateDepart = LocalDate.parse(dateDepartStr, formatter);
+                         // Vérification de la date de départ AVANT d'ajouter l'employé
+                            if (dateDepart.isBefore(dateArrivee)) {
+                                throw new IllegalArgumentException("Erreur : La date de départ est antérieure à la date d'arrivée.");
+                            }
                         }
 
                         ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
@@ -156,7 +160,13 @@ public class LigueConsole
                         System.out.println("Erreur : Format de date incorrect. Veuillez utiliser le format JJ/MM/AAAA.");
                         // Gérer l'erreur, par exemple en demandant à l'utilisateur de ressaisir la date
                         return; // Or throw the exception, or take other appropriate action.
-                    } catch (DataReadException e) { // If you still need to catch DataReadException
+                    } 
+                    catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                        return; // Ou throw, ou autre action
+
+                    }
+                    catch (DataReadException e) { // If you still need to catch DataReadException
                         // ... handle DataReadException ...
                     }
 	                // Convertir la date en LocalDate
