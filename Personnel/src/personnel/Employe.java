@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.TreeSet;
 
 /**
  * Employé d'une ligue hébergée par la M2L. Certains peuvent 
@@ -21,6 +22,8 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate dateDepart;
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
+	public int id;
+	public Employe administrateur;
 	
 	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
@@ -32,6 +35,22 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.ligue = ligue;
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
+	}
+	
+	/*Surcharge constructeur por ajouter le root */
+	public Employe(GestionPersonnel gestionPersonnel, int id, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	{
+		this.gestionPersonnel = gestionPersonnel;
+		this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.password = password;
+		this.mail = mail;
+		this.ligue = ligue;
+		this.dateArrivee = dateArrivee;
+		this.dateDepart = dateDepart;
+		this.gestionPersonnel = gestionPersonnel;
+		administrateur = gestionPersonnel.getRoot();
 	}
 	
 	/**

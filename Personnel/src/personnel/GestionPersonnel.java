@@ -1,6 +1,7 @@
 package personnel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -103,6 +104,11 @@ public class GestionPersonnel implements Serializable
 	{
 		return passerelle.insert(ligue);
 	}
+	
+	int insert(Employe employe) throws SauvegardeImpossible
+	{
+		return passerelle.insert(employe);
+	}
 
 	/**
 	 * Retourne le root (super-utilisateur).
@@ -113,4 +119,26 @@ public class GestionPersonnel implements Serializable
 	{
 		return root;
 	}
+	
+	 /**
+     * Crée le root à partir de son nom et de son mot de passe,
+     * puis l'affecte à la variable d'instance root.
+     * @param nom le nom du root.
+     * @param motDePasse le mot de passe du root.
+     */
+    public void addRoot(String nom, String motDePasse) {
+        // Supposons que l'ID du root est toujours 1
+        int idRoot = 1;
+
+        // Créer l'objet Employe pour le root
+        this.root = new Employe(this, null, nom, "Root", "root@example.com", motDePasse, LocalDate.now(), null);
+
+        // Insérer le root dans la base de données
+        try {
+            passerelle.insert(root);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); // Gérer l'exception selon vos besoins
+        }
+    }
+	
 }
