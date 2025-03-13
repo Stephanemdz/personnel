@@ -21,7 +21,7 @@ public class GestionPersonnel implements Serializable
 	private static final long serialVersionUID = -105283113987886425L;
 	private static GestionPersonnel gestionPersonnel = null;
 	private SortedSet<Ligue> ligues;
-	private Employe root = new Employe(this, null, "root", "", "", "toor", null, null);
+	private Employe root = addRoot1("root", "toor");;
 	public final static int SERIALIZATION = 1, JDBC = 2, 
 			TYPE_PASSERELLE = JDBC;  
 	private static Passerelle passerelle = new jdbc.JDBC();	
@@ -125,13 +125,21 @@ public class GestionPersonnel implements Serializable
      * puis l'affecte à la variable d'instance root.
      * @param nom le nom du root.
      * @param motDePasse le mot de passe du root.
+	 * @return 
      */
+	
+	
+	public Employe addRoot1(String nom, String password) {
+		Employe employe = new Employe(nom, password);
+		return employe;
+	}
+	
+	
+	
     public void addRoot(String nom, String motDePasse) {
-        // Supposons que l'ID du root est toujours 1
-        int idRoot = 1;
 
         // Créer l'objet Employe pour le root
-        this.root = new Employe(this, null, nom, "Root", "root@example.com", motDePasse, LocalDate.now(), null);
+        this.root = new Employe(this, 1, nom, "Root", "root@example.com", motDePasse, LocalDate.now(), null);
 
         // Insérer le root dans la base de données
         try {
