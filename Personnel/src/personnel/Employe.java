@@ -22,42 +22,37 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate dateDepart;
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
-	private int id = 1;
-	private Employe administrateur;
+	public int id;
+	public Employe administrateur;
 	
-	public Employe(GestionPersonnel gestionPersonnel, int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.password = password;
 		this.mail = mail;
+		this.ligue = ligue;
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
-		this.id = id;
 	}
 	
 	/*Surcharge constructeur por ajouter le root */
-	Employe(GestionPersonnel gestionPersonnel, int id,Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
+	public Employe(GestionPersonnel gestionPersonnel, int id, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
-		this(gestionPersonnel,1, nom, prenom, mail, password, dateArrivee, dateDepart);
-		this.id = gestionPersonnel.insert(this); 
+		this.gestionPersonnel = gestionPersonnel;
+		this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.password = password;
+		this.mail = mail;
+		this.ligue = ligue;
+		this.dateArrivee = dateArrivee;
+		this.dateDepart = dateDepart;
+		this.gestionPersonnel = gestionPersonnel;
+		administrateur = gestionPersonnel.getRoot();
 	}
-Employe(String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
-{
-	this.nom = nom;
-	this.prenom = prenom;
-	this.password = password;
-	this.mail = mail;
-	this.dateArrivee = dateArrivee;
-	this.dateDepart = dateDepart;
-}
-
-
-Employe (String nom, String password){
-	this.nom = nom;
-	this.password = password;
-}
+	
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
 	 * passée en paramètre.
@@ -243,9 +238,5 @@ Employe (String nom, String password){
 	
 	public String getPassword() {
 		return password;
-	}
-
-	public int getId() {
-		return id;
 	}
 }
