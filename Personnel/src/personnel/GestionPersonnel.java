@@ -21,7 +21,7 @@ public class GestionPersonnel implements Serializable
 	private static final long serialVersionUID = -105283113987886425L;
 	private static GestionPersonnel gestionPersonnel = null;
 	private SortedSet<Ligue> ligues;
-	private Employe root = addRoot1("root", "toor");;
+	private Employe root;
 	public final static int SERIALIZATION = 1, JDBC = 2, 
 			TYPE_PASSERELLE = JDBC;  
 	private static Passerelle passerelle = new jdbc.JDBC();	
@@ -49,6 +49,11 @@ public class GestionPersonnel implements Serializable
 			throw new RuntimeException("Vous ne pouvez créer qu'une seuls instance de cet objet.");
 		ligues = new TreeSet<>();
 		gestionPersonnel = this;
+		try {
+            addRoot("root", "toor"); // Appel de addRoot dans le constructeur
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); // Gérer l'exception selon vos besoins
+        }
 	}
 	
 	public void sauvegarder() throws SauvegardeImpossible
@@ -126,27 +131,14 @@ public class GestionPersonnel implements Serializable
      * @param nom le nom du root.
      * @param motDePasse le mot de passe du root.
 	 * @return 
+	 * @throws SauvegardeImpossible 
      */
 	
 	
-	public Employe addRoot1(String nom, String password) {
-		Employe employe = new Employe(nom, password);
+	public Employe addRoot(String nom, String password) throws SauvegardeImpossible {
+		Employe employe = new Employe(null, 1, nom,  null, null, password, null, null);
 		return employe;
 	}
 	
-	
-	
-    public void addRoot(String nom, String motDePasse) {
-
-        // Créer l'objet Employe pour le root
-        this.root = new Employe(this, 1, nom, "Root", "root@example.com", motDePasse, LocalDate.now(), null);
-
-        // Insérer le root dans la base de données
-        try {
-            passerelle.insert(root);
-        } catch (SauvegardeImpossible e) {
-            e.printStackTrace(); // Gérer l'exception selon vos besoins
-        }
-    }
 	
 }

@@ -23,9 +23,8 @@ public class Employe implements Serializable, Comparable<Employe>
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
 	private int id = 1;
-	private Employe administrateur;
 	
-	public Employe(GestionPersonnel gestionPersonnel, int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	public Employe(GestionPersonnel gestionPersonnel, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -34,30 +33,16 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.mail = mail;
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
-		this.id = id;
 	}
 	
 	/*Surcharge constructeur por ajouter le root */
-	Employe(GestionPersonnel gestionPersonnel, int id,Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
-	{
-		this(gestionPersonnel,1, nom, prenom, mail, password, dateArrivee, dateDepart);
-		this.id = gestionPersonnel.insert(this); 
+	
+
+	Employe (GestionPersonnel gestionPersonnel, int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible{
+		this.nom = nom;
+		this.password = password;
+		this.id = gestionPersonnel.insert(this);
 	}
-Employe(String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
-{
-	this.nom = nom;
-	this.prenom = prenom;
-	this.password = password;
-	this.mail = mail;
-	this.dateArrivee = dateArrivee;
-	this.dateDepart = dateDepart;
-}
-
-
-Employe (String nom, String password){
-	this.nom = nom;
-	this.password = password;
-}
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
 	 * passée en paramètre.
