@@ -22,26 +22,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate dateDepart;
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
-	public int id;
-	public Employe administrateur;
+	private int id;
 	
-	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
 	{
-		this.gestionPersonnel = gestionPersonnel;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.password = password;
-		this.mail = mail;
-		this.ligue = ligue;
-		this.dateArrivee = dateArrivee;
-		this.dateDepart = dateDepart;
+		this(gestionPersonnel, -1, ligue, nom, prenom, mail, password, dateDepart, dateDepart);
+		this.id = gestionPersonnel.insert(this); 
 	}
 	
 	/*Surcharge constructeur por ajouter le root */
-	public Employe(GestionPersonnel gestionPersonnel, int id, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	Employe(GestionPersonnel gestionPersonnel, int id, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
-		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.password = password;
@@ -49,8 +41,6 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.ligue = ligue;
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
-		this.gestionPersonnel = gestionPersonnel;
-		administrateur = gestionPersonnel.getRoot();
 	}
 	
 	/**

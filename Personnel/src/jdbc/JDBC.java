@@ -93,10 +93,11 @@ public class JDBC implements Passerelle
 		try 
 		{
 			PreparedStatement instruction;
-			instruction = connection.prepareStatement("insert into employe (nom) values(?)", Statement.RETURN_GENERATED_KEYS);
+			instruction = connection.prepareStatement("insert into compte_employe (nom, prenom, email, password) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			instruction.setString(1, employe.getNom());	
-			String hashedPassword = hashPassword(employe.getPassword()); // Méthode à implémenter
-	        instruction.setString(4, hashedPassword);
+			instruction.setString(2, employe.getPassword());
+			instruction.setString(3, employe.getPrenom());
+			instruction.setString(4, employe.getMail());
 			instruction.executeUpdate();
 			ResultSet id = instruction.getGeneratedKeys();
 			id.next();
@@ -109,9 +110,5 @@ public class JDBC implements Passerelle
 		}		
 	}
 
-	private String hashPassword(String password) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }
