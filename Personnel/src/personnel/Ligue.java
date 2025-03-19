@@ -61,6 +61,11 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	public void setNom(String nom)
 	{
 		this.nom = nom;
+		try {
+            gestionPersonnel.update(this);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); 
+        }
 	}
 
 	/**
@@ -144,4 +149,17 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	{
 		return nom;
 	}
+
+	public int getId() {
+		return id;
+	}
+	
+	 public void setId(int id) {
+	        this.id = id;
+	        try {
+	            gestionPersonnel.update(this);
+	        } catch (SauvegardeImpossible e) {
+	            e.printStackTrace(); 
+	        }
+	    }
 }

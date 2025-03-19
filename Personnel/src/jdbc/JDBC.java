@@ -6,12 +6,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import personnel.*;
 
 public class JDBC implements Passerelle 
 {
 	Connection connection;
+	private Ligue ligue;
 
 	public JDBC()
 	{
@@ -41,6 +43,27 @@ public class JDBC implements Passerelle
 			ResultSet ligues = instruction.executeQuery(requete);
 			while (ligues.next())
 				gestionPersonnel.addLigue(ligues.getInt(1), ligues.getString(2));
+			
+			// Récupérer les informations de root
+	        String requeteRoot = "SELECT * FROM employe WHERE nom = 'root'"; // Adaptez la requête selon votre base
+	        Statement instructionRoot = connection.createStatement();
+	        ResultSet rootResult = instructionRoot.executeQuery(requeteRoot);
+
+	        if (rootResult.next()) {
+	            // Créer l'objet Employe root à partir des résultats
+	            int id = rootResult.getInt("id");
+	            int idLigue = rootResult.getInt("idLigue");
+	            String nom = rootResult.getString("nom");
+	            String prenom = rootResult.getString("prenom");
+	            String mail = rootResult.getString("mail");
+	            String password = rootResult.getString("password");
+	            LocalDate dateArrivee = rootResult.getObject("dateArrivee", LocalDate.class);
+	            LocalDate dateDepart = rootResult.getObject("dateDepart", LocalDate.class);
+
+
+	            Employe root = new Employe(gestionPersonnel, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
+	            gestionPersonnel.addRoot2(gestionPersonnel, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
+	        }
 		}
 		catch (SQLException e)
 		{
@@ -88,6 +111,22 @@ public class JDBC implements Passerelle
 		}		
 	}
 	
+	//Méthode pour la modification de la ligue
+	public int update(Ligue ligue) throws SauvegardeImpossible {
+		try {
+	        PreparedStatement instruction;
+	        instruction = connection.prepareStatement("UPDATE ligue SET nom = ? WHERE id = ?");
+	        instruction.setString(1, ligue.getNom());
+	        instruction.setInt(2, ligue.getId()); // Ajout de la clause WHERE
+
+	        return instruction.executeUpdate(); // Retourne le nombre de lignes affectées
+	    } catch (SQLException exception) {
+	        exception.printStackTrace();
+	        throw new SauvegardeImpossible(exception);
+	    }
+    }
+
+	//Méthode permettant d'insérer un employé
 	public int insert (Employe employe) throws SauvegardeImpossible
 	{
 		try 
@@ -108,6 +147,23 @@ public class JDBC implements Passerelle
 			exception.printStackTrace();
 			throw new SauvegardeImpossible(exception);
 		}		
+	}
+	
+	//méthode permettant d'update l'employé
+	public int update(Employe employe) throws SauvegardeImpossible {
+	    try {
+	        PreparedStatement instruction;
+	        instruction = connection.prepareStatement("UPDATE compte_employe SET nom = ?, prenom = ?, email = ?, password = ? WHERE id = ?");
+	        instruction.setString(1, employe.getNom());
+	        instruction.setString(2, employe.getPrenom());
+	        instruction.setString(3, employe.getMail());
+	        instruction.setString(4, employe.getPassword());
+	        instruction.setInt(5, employe.getId()); 
+	        return instruction.executeUpdate(); // Retourne le nombre de lignes affectées
+	    } catch (SQLException exception) {
+	        exception.printStackTrace();
+	        throw new SauvegardeImpossible(exception);
+	    }
 	}
 
 	

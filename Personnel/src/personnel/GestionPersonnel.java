@@ -110,9 +110,19 @@ public class GestionPersonnel implements Serializable
 		return passerelle.insert(ligue);
 	}
 	
+	int update(Ligue ligue) throws SauvegardeImpossible
+	{
+		return passerelle.update(ligue);
+	}
+	
 	int insert(Employe employe) throws SauvegardeImpossible
 	{
 		return passerelle.insert(employe);
+	}
+	
+	int update(Employe employe) throws SauvegardeImpossible
+	{
+		return passerelle.update(employe);
 	}
 
 	/**
@@ -133,6 +143,13 @@ public class GestionPersonnel implements Serializable
      */
 	public void addRoot(String nom, String password) throws SauvegardeImpossible {
 		 Employe employe = new Employe(this, null, nom, null, null, password, null, null);
+
+
+	        // Définir l'attribut root
+	        this.root = employe;
+	}
+	public void addRoot2(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible {
+		 Employe employe = new Employe(this, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
 
 
 	        // Définir l'attribut root

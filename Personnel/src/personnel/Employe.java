@@ -24,13 +24,14 @@ public class Employe implements Serializable, Comparable<Employe>
 	private GestionPersonnel gestionPersonnel;
 	private int id;
 	
+	/*Surcharge constructeur por ajouter le root */
 	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
 	{
 		this(gestionPersonnel, -1, ligue, nom, prenom, mail, password, dateDepart, dateDepart);
 		this.id = gestionPersonnel.insert(this); 
 	}
 	
-	/*Surcharge constructeur por ajouter le root */
+	
 	Employe(GestionPersonnel gestionPersonnel, int id, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
@@ -85,6 +86,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	public void setNom(String nom)
 	{
 		this.nom = nom;
+		try {
+            gestionPersonnel.update(this);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); 
+        }
 	}
 
 	/**
@@ -105,6 +111,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	public void setPrenom(String prenom)
 	{
 		this.prenom = prenom;
+		try {
+            gestionPersonnel.update(this);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); 
+        }
 	}
 
 	/**
@@ -125,6 +136,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	public void setMail(String mail)
 	{
 		this.mail = mail;
+		try {
+            gestionPersonnel.update(this);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); 
+        }
 	}
 	
 	public LocalDate getDateArrivee() {
@@ -133,6 +149,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	
 	public void setDateArrivee(LocalDate dateArrivee) {
 		this.dateArrivee = dateArrivee;
+		try {
+            gestionPersonnel.update(this);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); 
+        }
 	}
 	
 	public LocalDate getDateDepart() {
@@ -152,6 +173,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	            this.dateDepart = dateDepart;
 	        } catch (DateTimeParseException e) {
 	            throw new IllegalArgumentException("Format de date invalide (AAAA-MM-JJ) : " + dateDepart, e);
+	        }
+	        try {
+	            gestionPersonnel.update(this);
+	        } catch (SauvegardeImpossible e) {
+	            e.printStackTrace(); 
 	        }
 	    }
 
@@ -176,6 +202,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	public void setPassword(String password)
 	{
 		this.password= password;
+		try {
+            gestionPersonnel.update(this);
+        } catch (SauvegardeImpossible e) {
+            e.printStackTrace(); 
+        }
 	}
 
 	/**
@@ -187,6 +218,15 @@ public class Employe implements Serializable, Comparable<Employe>
 	{
 		return ligue;
 	}
+	
+	 public void setLigue(Ligue ligue) {
+	        this.ligue = ligue;
+	        try {
+	            gestionPersonnel.update(this);
+	        } catch (SauvegardeImpossible e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 	/**
 	 * Supprime l'employé. Si celui-ci est un administrateur, le root
@@ -229,4 +269,17 @@ public class Employe implements Serializable, Comparable<Employe>
 	public String getPassword() {
 		return password;
 	}
+
+
+	public int getId() {
+		return id;
+	}
+	 public void setId(int id) {
+	        this.id = id;
+	        try {
+	            gestionPersonnel.update(this);
+	        } catch (SauvegardeImpossible e) {
+	            e.printStackTrace(); 
+	        }
+	    }
 }
