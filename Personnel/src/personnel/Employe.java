@@ -25,7 +25,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	private int id;
 	
 	/*Surcharge constructeur por ajouter le root */
-	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
+	 Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
 	{
 		this(gestionPersonnel, -1, ligue, nom, prenom, mail, password, dateDepart, dateDepart);
 		this.id = gestionPersonnel.insert(this); 
@@ -86,6 +86,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	public void setNom(String nom)
 	{
 		this.nom = nom;
+		//IT3: Modification root
 		try {
             gestionPersonnel.update(this);
         } catch (SauvegardeImpossible e) {

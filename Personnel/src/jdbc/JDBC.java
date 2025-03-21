@@ -50,19 +50,11 @@ public class JDBC implements Passerelle
 	        ResultSet rootResult = instructionRoot.executeQuery(requeteRoot);
 
 	        if (rootResult.next()) {
-	            // Créer l'objet Employe root à partir des résultats
-	            int id = rootResult.getInt("id");
-	            int idLigue = rootResult.getInt("idLigue");
+	            // Créer l'objet Employe root à partir des résultat
 	            String nom = rootResult.getString("nom");
-	            String prenom = rootResult.getString("prenom");
-	            String mail = rootResult.getString("mail");
 	            String password = rootResult.getString("password");
-	            LocalDate dateArrivee = rootResult.getObject("dateArrivee", LocalDate.class);
-	            LocalDate dateDepart = rootResult.getObject("dateDepart", LocalDate.class);
-
-
-	            Employe root = new Employe(gestionPersonnel, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
-	            gestionPersonnel.addRoot2(gestionPersonnel, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
+	            Employe root = new Employe(gestionPersonnel, nom, password);
+	            gestionPersonnel.addRoot(gestionPersonnel, nom, password);
 	        }
 		}
 		catch (SQLException e)

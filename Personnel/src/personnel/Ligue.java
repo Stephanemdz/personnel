@@ -27,7 +27,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * Crée une ligue.
 	 * @param nom le nom de la ligue.
 	 */
-	
+	//Surcharge du Constructeur Ligue
 	Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
 	{
 		this(gestionPersonnel, -1, nom);
