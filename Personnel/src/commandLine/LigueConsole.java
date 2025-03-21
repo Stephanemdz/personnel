@@ -173,26 +173,7 @@ public class LigueConsole
                     	System.out.println("Ecriture impossible dans la base de données");
       
                     }
-//	                // Convertir la date en LocalDate
-//	                DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//	                LocalDate dateArrivee = LocalDate.parse(dateArriveeStr, formatter);
-//
-//
-//	                try {
-//	                    dateArrivee = LocalDate.parse(dateArriveeStr, formatter);
-//	                    LocalDate dateDepart = null;
-//
-//	                    if (!dateDepartStr.isEmpty()) {
-//	                        dateDepart = LocalDate.parse(dateDepartStr, formatter);
-//	                    }
-//
-//	                    ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
-//	                } catch (DataReadException e) {
-//	                    System.out.println("Erreur : Format de date incorrect. Veuillez utiliser le format JJ/MM/AAAA.");
-//	                }
-//	                catch(SauvegardeImpossible e) {
-//	                	System.out.println("Ecriture impossible dans la base de données");
-//	                }
+
 				}
 		);
 	}
