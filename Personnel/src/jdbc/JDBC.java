@@ -45,7 +45,7 @@ public class JDBC implements Passerelle
 				gestionPersonnel.addLigue(ligues.getInt(1), ligues.getString(2));
 			
 			// Récupérer les informations de root
-	        String requeteRoot = "SELECT * FROM employe WHERE nom = 'root'"; // Adaptez la requête selon votre base
+	        String requeteRoot = "SELECT * FROM compte_employe WHERE nom = 'root'"; // Adaptez la requête selon votre base
 	        Statement instructionRoot = connection.createStatement();
 	        ResultSet rootResult = instructionRoot.executeQuery(requeteRoot);
 
@@ -126,9 +126,9 @@ public class JDBC implements Passerelle
 			PreparedStatement instruction;
 			instruction = connection.prepareStatement("insert into compte_employe (nom, prenom, email, password) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			instruction.setString(1, employe.getNom());	
-			instruction.setString(2, employe.getPassword());
-			instruction.setString(3, employe.getPrenom());
-			instruction.setString(4, employe.getMail());
+			instruction.setString(2, employe.getPrenom());
+			instruction.setString(3, employe.getMail());
+			instruction.setString(4, employe.getPassword());
 			instruction.executeUpdate();
 			ResultSet id = instruction.getGeneratedKeys();
 			id.next();
