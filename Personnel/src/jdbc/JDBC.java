@@ -51,10 +51,10 @@ public class JDBC implements Passerelle
 
 	        if (rootResult.next()) {
 	            // Créer l'objet Employe root à partir des résultat
+	        	int id = rootResult.getInt("id");
 	            String nom = rootResult.getString("nom");
 	            String password = rootResult.getString("password");
-	            Employe root = new Employe(gestionPersonnel, nom, password);
-	            gestionPersonnel.addRoot(gestionPersonnel, nom, password);
+	            gestionPersonnel.addRoot(id, nom, password);
 	        }
 		}
 		catch (SQLException e)

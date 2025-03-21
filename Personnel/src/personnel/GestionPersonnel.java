@@ -147,6 +147,12 @@ public class GestionPersonnel implements Serializable
 	        // Définir l'attribut root
 	        this.root = employe;
 	}
+	public void addRoot( int id, String nom, String password){
+		 Employe employe = new Employe(this, id, null, nom, null, null, password, null, null);
+
+	        // Définir l'attribut root
+	        this.root = employe;
+	}
 	
 	
 }
