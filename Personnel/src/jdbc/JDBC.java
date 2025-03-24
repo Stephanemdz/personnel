@@ -41,8 +41,35 @@ public class JDBC implements Passerelle
 			String requete = "select * from ligue";
 			Statement instruction = connection.createStatement();
 			ResultSet ligues = instruction.executeQuery(requete);
-			while (ligues.next())
-				gestionPersonnel.addLigue(ligues.getInt(1), ligues.getString(2));
+			while (ligues.next()) {
+				int ligueId = ligues.getInt("id");
+				String ligueNom = ligues.getString("nom");
+				Ligue ligue = gestionPersonnel.addLigue(ligueId, ligueNom);
+				
+				//Récupération des employés de la ligue
+				String requestEmployes = "SELECT compte_employe.*, ligue.nom AS ligue_nom FROM compte_employe INNER JOIN ligue ON compte_employe.ligue_id = ligue.id WHERE compte_employe.ligue_id = ?;";
+				PreparedStatement instructionEmployes = connection.prepareStatement(requestEmployes);
+				instructionEmployes.setInt(1, ligueId);
+				ResultSet employes = instructionEmployes.executeQuery();
+				
+				while (employes.next()) {
+					int employeId = employes.getInt("id");
+					String employeNom = employes.getString("nom");
+					String employePrenom = employes.getString("prenom");
+                    String employeMail = employes.getString("email");
+                    String employePassword = employes.getString("password");
+                    LocalDate employeDateArrivee = employes.getObject("dateArrivee", LocalDate.class);
+                    LocalDate employeDateDepart = employes.getObject("dateDepart", LocalDate.class);
+                    
+                    // Instanciation de l'objet Employe en utilisant la surcharge du constructeur
+                    Employe employeObj = Employe.creerEmploye(gestionPersonnel, ligue, employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
+                    employeObj.setId(employeId);
+                    ligue.addEmploye(employeObj);
+                    
+				}
+			}
+			
+				//gestionPersonnel.addLigue(ligues.getInt(1), ligues.getString(2));
 			
 			// Récupérer les informations de root
 	        String requeteRoot = "SELECT * FROM compte_employe WHERE nom = 'root'"; // Adaptez la requête selon votre base
@@ -57,7 +84,7 @@ public class JDBC implements Passerelle
 	            gestionPersonnel.addRoot(id, nom, password);
 	        }
 		}
-		catch (SQLException e)
+		catch (SQLException | SauvegardeImpossible e)
 		{
 			System.out.println(e);
 		}
@@ -124,7 +151,7 @@ public class JDBC implements Passerelle
 		try 
 		{
 			PreparedStatement instruction;
-			instruction = connection.prepareStatement("insert into compte_employe (nom, prenom, email, password, ligue_id) values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			instruction = connection.prepareStatement("insert into compte_employe (nom, prenom, email, password, ligue_id, dateArrivee, dateDepart) values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			instruction.setString(1, employe.getNom());	
 			instruction.setString(2, employe.getPrenom());
 			instruction.setString(3, employe.getMail());
@@ -134,6 +161,8 @@ public class JDBC implements Passerelle
             } else {
                 instruction.setInt(5, employe.getLigue().getId());
             }
+			instruction.setObject(6, employe.getDateArrivee());
+	        instruction.setObject(7, employe.getDateDepart());
 			instruction.executeUpdate();
 			ResultSet id = instruction.getGeneratedKeys();
 			id.next();

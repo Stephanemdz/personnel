@@ -3,6 +3,7 @@ package personnel;
 import java.io.Serializable;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.TreeSet;
 
@@ -25,9 +26,9 @@ public class Employe implements Serializable, Comparable<Employe>
 	private int id;
 	
 	/*Surcharge constructeur por ajouter le root */
-	 Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
 	{
-		this(gestionPersonnel, -1, ligue, nom, prenom, mail, password, dateDepart, dateDepart);
+		this(gestionPersonnel, -1, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
 		this.id = gestionPersonnel.insert(this); 
 	}
 	
@@ -42,6 +43,10 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.ligue = ligue;
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
+	}
+	
+	public static Employe creerEmploye(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible {
+	    return new Employe(gestionPersonnel, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
 	}
 	
 	/**
@@ -257,14 +262,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	}
 	
 	@Override
-	public String toString()
-	{
-		String res = "nom" +  nom + " " + prenom + " " + mail + dateArrivee + " " + dateDepart + " " + " (";
-		if (estRoot())
-			res += "super-utilisateur";
-		else
-			res += ligue.toString();
-		return res + ")";
+	public String toString() {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    String dateArriveeStr = (dateArrivee != null) ? dateArrivee.format(formatter) : "N/A";
+	    String dateDepartStr = (dateDepart != null) ? dateDepart.format(formatter) : "N/A";
+
+	    String res = "Nom: " + nom + ", Prénom: " + prenom + ", Email: " + mail + ", Date d'arrivée: " + dateArriveeStr + ", Date de départ: " + dateDepartStr + " (";
+	    if (estRoot()) {
+	        res += "super-utilisateur";
+	    } else {
+	        res += ligue.toString();
+	    }
+	    return res + ")";
 	}
 	
 	public String getPassword() {

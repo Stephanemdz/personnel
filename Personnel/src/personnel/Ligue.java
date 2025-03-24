@@ -122,6 +122,9 @@ public class Ligue implements Serializable, Comparable<Ligue>
 		return employe;
 	}
 	
+	public void addEmploye(Employe employe) {
+        employes.add(employe);
+    }
 	
 	void remove(Employe employe)
 	{
@@ -163,4 +166,5 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	            e.printStackTrace(); 
 	        }
 	    }
+
 }
