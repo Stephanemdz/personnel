@@ -67,6 +67,14 @@ public class Ligue implements Serializable, Comparable<Ligue>
             e.printStackTrace(); 
         }
 	}
+	
+	public void supprimerEmploye() {
+	    try {
+	        gestionPersonnel.deleteEmploye(this.getId());
+	    } catch (SauvegardeImpossible e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	/**
 	 * Retourne l'administrateur de la ligue.

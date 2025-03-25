@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import personnel.*;
 
@@ -33,62 +35,68 @@ public class JDBC implements Passerelle
 	}
 	
 	@Override
-	public GestionPersonnel getGestionPersonnel() 
-	{
-		GestionPersonnel gestionPersonnel = new GestionPersonnel();
-		try 
-		{
-			String requete = "select * from ligue";
-			Statement instruction = connection.createStatement();
-			ResultSet ligues = instruction.executeQuery(requete);
-			while (ligues.next()) {
-				int ligueId = ligues.getInt("id");
-				String ligueNom = ligues.getString("nom");
-				Ligue ligue = gestionPersonnel.addLigue(ligueId, ligueNom);
-				
-				//Récupération des employés de la ligue
-				String requestEmployes = "SELECT compte_employe.*, ligue.nom AS ligue_nom FROM compte_employe INNER JOIN ligue ON compte_employe.ligue_id = ligue.id WHERE compte_employe.ligue_id = ?;";
-				PreparedStatement instructionEmployes = connection.prepareStatement(requestEmployes);
-				instructionEmployes.setInt(1, ligueId);
-				ResultSet employes = instructionEmployes.executeQuery();
-				
-				while (employes.next()) {
-					int employeId = employes.getInt("id");
-					String employeNom = employes.getString("nom");
-					String employePrenom = employes.getString("prenom");
-                    String employeMail = employes.getString("email");
-                    String employePassword = employes.getString("password");
-                    LocalDate employeDateArrivee = employes.getObject("dateArrivee", LocalDate.class);
-                    LocalDate employeDateDepart = employes.getObject("dateDepart", LocalDate.class);
-                    
-                    // Instanciation de l'objet Employe en utilisant la surcharge du constructeur
-                    Employe employeObj = Employe.creerEmploye(gestionPersonnel, ligue, employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
-                    employeObj.setId(employeId);
-                    ligue.addEmploye(employeObj);
-                    
-				}
-			}
-			
-				//gestionPersonnel.addLigue(ligues.getInt(1), ligues.getString(2));
-			
-			// Récupérer les informations de root
-	        String requeteRoot = "SELECT * FROM compte_employe WHERE nom = 'root'"; // Adaptez la requête selon votre base
+	public GestionPersonnel getGestionPersonnel() {
+	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
+	    try {
+	        String requete = "select * from ligue";
+	        Statement instruction = connection.createStatement();
+	        ResultSet ligues = instruction.executeQuery(requete);
+	        while (ligues.next()) {
+	            int ligueId = ligues.getInt("id");
+	            String ligueNom = ligues.getString("nom");
+	            Ligue ligue = gestionPersonnel.addLigue(ligueId, ligueNom);
+
+	            // Utilisation d'un Set pour éviter les doublons
+	            Set<Integer> employeIds = new HashSet<>();
+
+	            String requestEmployes = "SELECT compte_employe.*, ligue.nom AS ligue_nom FROM compte_employe INNER JOIN ligue ON compte_employe.ligue_id = ligue.id WHERE compte_employe.ligue_id = ?;";
+	            PreparedStatement instructionEmployes = connection.prepareStatement(requestEmployes);
+	            instructionEmployes.setInt(1, ligueId);
+	            ResultSet employes = instructionEmployes.executeQuery();
+
+	            while (employes.next()) {
+	                int employeId = employes.getInt("id");
+
+	                // Vérification si l'employé existe déjà
+	                if (!employeIds.contains(employeId)) {
+	                    String employeNom = employes.getString("nom");
+	                    String employePrenom = employes.getString("prenom");
+	                    String employeMail = employes.getString("email");
+	                    String employePassword = employes.getString("password");
+	                    LocalDate employeDateArrivee = employes.getObject("dateArrivee", LocalDate.class);
+	                    LocalDate employeDateDepart = employes.getObject("dateDepart", LocalDate.class);
+
+	                    Employe employeObj = Employe.creerEmploye(gestionPersonnel, ligue, employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
+	                    employeObj.setId(employeId);
+	                    ligue.addEmploye(employeObj);
+
+	                    // Ajout de l'ID de l'employé au Set
+	                    employeIds.add(employeId);
+	                }else {
+	                	System.out.println("Employé avec l'ID " + employeId + " existe déjà.");
+	                }
+	            }
+	        }
+
+	     // Récupérer les informations de root
+	        String requeteRoot = "SELECT * FROM compte_employe WHERE nom = 'root'";
 	        Statement instructionRoot = connection.createStatement();
 	        ResultSet rootResult = instructionRoot.executeQuery(requeteRoot);
 
 	        if (rootResult.next()) {
-	            // Créer l'objet Employe root à partir des résultat
-	        	int id = rootResult.getInt("id");
+	            int id = rootResult.getInt("id");
 	            String nom = rootResult.getString("nom");
 	            String password = rootResult.getString("password");
-	            gestionPersonnel.addRoot(id, nom, password);
+
+	            // Vérifier si root existe déjà
+	            if (gestionPersonnel.getRoot() == null) {
+	                gestionPersonnel.addRoot(id, nom, password);
+	            }
 	        }
-		}
-		catch (SQLException | SauvegardeImpossible e)
-		{
-			System.out.println(e);
-		}
-		return gestionPersonnel;
+	    } catch (SQLException | SauvegardeImpossible e) {
+	        System.out.println(e);
+	    }
+	    return gestionPersonnel;
 	}
 
 	@Override
@@ -149,7 +157,8 @@ public class JDBC implements Passerelle
 	public int insert (Employe employe) throws SauvegardeImpossible
 	{
 		try 
-		{
+		{			
+			
 			PreparedStatement instruction;
 			instruction = connection.prepareStatement("insert into compte_employe (nom, prenom, email, password, ligue_id, dateArrivee, dateDepart) values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			instruction.setString(1, employe.getNom());	
@@ -175,6 +184,7 @@ public class JDBC implements Passerelle
 		}		
 	}
 	
+
 	//méthode permettant d'update l'employé
 	public int update(Employe employe) throws SauvegardeImpossible {
 	    try {
@@ -190,6 +200,19 @@ public class JDBC implements Passerelle
 	        exception.printStackTrace();
 	        throw new SauvegardeImpossible(exception);
 	    }
+	}
+	
+	//Méthode permettant de supprimer un employé de la base de données
+	public int deleteEmploye(int employeId) throws SauvegardeImpossible{
+		try {
+			PreparedStatement instruction;
+			instruction = connection.prepareStatement("DELETE FROM compte_employe WHERE id = ?");
+			instruction.setInt(1, employeId);
+			return instruction.executeUpdate();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+			throw new SauvegardeImpossible(exception);
+		}
 	}
 
 	

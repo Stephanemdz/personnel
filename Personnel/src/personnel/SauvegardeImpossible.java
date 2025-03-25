@@ -14,6 +14,7 @@ public class SauvegardeImpossible extends Exception
 		this.exception = exception;
 	}
 	
+	
 	@Override
 	public void printStackTrace() 
 	{
