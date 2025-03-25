@@ -15,7 +15,7 @@ CREATE TABLE compte_employe (
     prenom VARCHAR(255),
     email VARCHAR(250) UNIQUE, 
     password CHAR(64) NOT NULL, 
-    dateArrive DATE,
+    dateArrivee DATE,
     dateDepart DATE,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
