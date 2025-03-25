@@ -218,7 +218,20 @@ public class LigueConsole
 	
 	private Option supprimer(Ligue ligue)
 	{
-		return new Option("Supprimer", "d", () -> {ligue.remove();});
+		return new Option("Supprimer", "d", () -> {
+	        if (demanderConfirmation("Êtes-vous sûr de vouloir supprimer la ligue " + ligue.getNom() + " ?")) {
+	            try {
+	                gestionPersonnel.deleteLigue(ligue.getId());
+	                System.out.println("Ligue " + ligue.getNom() + " supprimée avec succès.");
+	            } catch (SauvegardeImpossible e) {
+	                System.err.println("Impossible de supprimer la ligue : " + e.getMessage());
+	            }
+	        }
+	    });
+	}
+	private boolean demanderConfirmation(String message) {
+	    String reponse = getString(message + " (o/n) : ");
+	    return reponse.equalsIgnoreCase("o");
 	}
 	
 	private Option deleteEmploye(Employe employe)

@@ -187,15 +187,22 @@ public class JDBC implements Passerelle
 
 	//méthode permettant d'update l'employé
 	public int update(Employe employe) throws SauvegardeImpossible {
-	    try {
+		try {
 	        PreparedStatement instruction;
-	        instruction = connection.prepareStatement("UPDATE compte_employe SET nom = ?, prenom = ?, email = ?, password = ? WHERE id = ?");
+	        instruction = connection.prepareStatement("UPDATE compte_employe SET nom = ?, prenom = ?, email = ?, password = ?, ligue_id = ?, dateArrivee = ?, dateDepart = ? WHERE id = ?");
 	        instruction.setString(1, employe.getNom());
 	        instruction.setString(2, employe.getPrenom());
 	        instruction.setString(3, employe.getMail());
 	        instruction.setString(4, employe.getPassword());
-	        instruction.setInt(5, employe.getId()); 
-	        return instruction.executeUpdate(); // Retourne le nombre de lignes affectées
+	        if (employe.getLigue() == null) {
+	            instruction.setNull(5, java.sql.Types.INTEGER);
+	        } else {
+	            instruction.setInt(5, employe.getLigue().getId());
+	        }
+	        instruction.setObject(6, employe.getDateArrivee());
+	        instruction.setObject(7, employe.getDateDepart());
+	        instruction.setInt(8, employe.getId());
+	        return instruction.executeUpdate();
 	    } catch (SQLException exception) {
 	        exception.printStackTrace();
 	        throw new SauvegardeImpossible(exception);
@@ -213,6 +220,18 @@ public class JDBC implements Passerelle
 			exception.printStackTrace();
 			throw new SauvegardeImpossible(exception);
 		}
+	}
+	
+	public int deleteLigue(int ligueId) throws SauvegardeImpossible {
+	    try {
+	        PreparedStatement instruction;
+	        instruction = connection.prepareStatement("DELETE FROM ligue WHERE id = ?");
+	        instruction.setInt(1, ligueId);
+	        return instruction.executeUpdate();
+	    } catch (SQLException exception) {
+	        exception.printStackTrace();
+	        throw new SauvegardeImpossible(exception);
+	    }
 	}
 
 	

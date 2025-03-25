@@ -129,6 +129,11 @@ public class GestionPersonnel implements Serializable
 	{
 		return passerelle.deleteEmploye(employeId);
 	}
+	
+	public int deleteLigue(int ligueId) throws SauvegardeImpossible
+	{
+		return passerelle.deleteLigue(ligueId);
+	}
 
 	/**
 	 * Retourne le root (super-utilisateur).
