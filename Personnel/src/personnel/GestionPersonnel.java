@@ -31,6 +31,7 @@ public class GestionPersonnel implements Serializable
 	 * Crée cet objet s'il n'existe déjà.
 	 * @return l'unique objet de type {@link GestionPersonnel}.
 	 */
+
 	
 	public static GestionPersonnel getGestionPersonnel()
 	{
@@ -46,14 +47,17 @@ public class GestionPersonnel implements Serializable
 	public GestionPersonnel()
 	{
 		if (gestionPersonnel != null)
-			throw new RuntimeException("Vous ne pouvez créer qu'une seuls instance de cet objet.");
-		ligues = new TreeSet<>();
-		gestionPersonnel = this;
-		 try {
-	            addRoot("root", "toor"); // Initialisation de root ici
-	        } catch (SauvegardeImpossible e) {
-	            e.printStackTrace(); // Gérer l'exception selon vos besoins
+	        throw new RuntimeException("Vous ne pouvez créer qu'une seuls instance de cet objet.");
+	    ligues = new TreeSet<>();
+	    gestionPersonnel = this;
+	    try {
+	        // Vérifier si root existe déjà
+	        if (!passerelle.rootExiste()) {
+	            addRoot("root", "toor"); // Initialiser root seulement s'il n'existe pas
 	        }
+	    } catch (SauvegardeImpossible e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public void sauvegarder() throws SauvegardeImpossible
@@ -125,7 +129,7 @@ public class GestionPersonnel implements Serializable
 		return passerelle.update(employe);
 	}
 	
-	int deleteEmploye(int employeId) throws SauvegardeImpossible
+	public int deleteEmploye(int employeId) throws SauvegardeImpossible
 	{
 		return passerelle.deleteEmploye(employeId);
 	}

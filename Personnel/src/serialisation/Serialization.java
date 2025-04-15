@@ -73,4 +73,8 @@ public class Serialization implements personnel.Passerelle
 	{
 		return -1;
 	}
+	public boolean rootExiste()throws SauvegardeImpossible
+	{
+		return true;
+	}
 }

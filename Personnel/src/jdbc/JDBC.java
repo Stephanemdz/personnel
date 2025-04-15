@@ -34,6 +34,19 @@ public class JDBC implements Passerelle
 		}
 	}
 	
+	public boolean employeExisteParEmail(String email) throws SauvegardeImpossible {
+        try {
+            PreparedStatement instruction = connection.prepareStatement("SELECT COUNT(*) FROM compte_employe WHERE email = ?");
+            instruction.setString(1, email);
+            ResultSet resultat = instruction.executeQuery();
+            resultat.next();
+            return resultat.getInt(1) > 0;
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            throw new SauvegardeImpossible(exception);
+        }
+    }
+	
 	@Override
 	public GestionPersonnel getGestionPersonnel() {
 	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
@@ -66,14 +79,13 @@ public class JDBC implements Passerelle
 	                    LocalDate employeDateArrivee = employes.getObject("dateArrivee", LocalDate.class);
 	                    LocalDate employeDateDepart = employes.getObject("dateDepart", LocalDate.class);
 
-	                    Employe employeObj = Employe.creerEmploye(gestionPersonnel, ligue, employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
-	                    employeObj.setId(employeId);
-	                    ligue.addEmploye(employeObj);
+	                    // Utilisation de la méthode addEmploye() existante
+	                    ligue.addEmploye(employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
 
 	                    // Ajout de l'ID de l'employé au Set
 	                    employeIds.add(employeId);
 	                }else {
-	                	System.out.println("Employé avec l'ID " + employeId + " existe déjà.");
+	                    System.out.println("Employé avec l'ID " + employeId + " existe déjà.");
 	                }
 	            }
 	        }
@@ -154,34 +166,35 @@ public class JDBC implements Passerelle
     }
 
 	//Méthode permettant d'insérer un employé
-	public int insert (Employe employe) throws SauvegardeImpossible
-	{
-		try 
-		{			
-			
-			PreparedStatement instruction;
-			instruction = connection.prepareStatement("insert into compte_employe (nom, prenom, email, password, ligue_id, dateArrivee, dateDepart) values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			instruction.setString(1, employe.getNom());	
-			instruction.setString(2, employe.getPrenom());
-			instruction.setString(3, employe.getMail());
-			instruction.setString(4, employe.getPassword());
-			if (employe.getLigue() == null) {
-                instruction.setNull(5, java.sql.Types.INTEGER);
-            } else {
-                instruction.setInt(5, employe.getLigue().getId());
-            }
-			instruction.setObject(6, employe.getDateArrivee());
+	public int insert(Employe employe) throws SauvegardeImpossible {
+	    try {
+	        // Vérifier si un employé avec cet email existe déjà
+	        if (employeExisteParEmail(employe.getMail())) {
+	            System.out.println("Avertissement : Employé avec l'email " + employe.getMail() + " existe déjà dans la base de données. L'insertion a été ignorée.");
+	            return -1; // Retourner une valeur indiquant que l'insertion n'a pas eu lieu
+	        }
+
+	        PreparedStatement instruction;
+	        instruction = connection.prepareStatement("INSERT INTO compte_employe (nom, prenom, email, password, ligue_id, dateArrivee, dateDepart) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	        instruction.setString(1, employe.getNom());
+	        instruction.setString(2, employe.getPrenom());
+	        instruction.setString(3, employe.getMail());
+	        instruction.setString(4, employe.getPassword());
+	        if (employe.getLigue() == null) {
+	            instruction.setNull(5, java.sql.Types.INTEGER);
+	        } else {
+	            instruction.setInt(5, employe.getLigue().getId());
+	        }
+	        instruction.setObject(6, employe.getDateArrivee());
 	        instruction.setObject(7, employe.getDateDepart());
-			instruction.executeUpdate();
-			ResultSet id = instruction.getGeneratedKeys();
-			id.next();
-			return id.getInt(1);
-		} 
-		catch (SQLException exception) 
-		{
-			exception.printStackTrace();
-			throw new SauvegardeImpossible(exception);
-		}		
+	        instruction.executeUpdate();
+	        ResultSet id = instruction.getGeneratedKeys();
+	        id.next();
+	        return id.getInt(1);
+	    } catch (SQLException exception) {
+	        exception.printStackTrace();
+	        throw new SauvegardeImpossible(exception);
+	    }
 	}
 	
 
@@ -235,4 +248,15 @@ public class JDBC implements Passerelle
 	}
 
 	
+	public boolean rootExiste() throws SauvegardeImpossible {
+        try {
+            PreparedStatement instruction = connection.prepareStatement("SELECT COUNT(*) FROM compte_employe WHERE nom = 'root'");
+            ResultSet resultat = instruction.executeQuery();
+            resultat.next();
+            return resultat.getInt(1) > 0;
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            throw new SauvegardeImpossible(exception);
+        }
+    }
 }

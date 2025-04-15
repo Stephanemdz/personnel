@@ -11,4 +11,8 @@ public interface Passerelle
 	public int update(Employe employe) throws SauvegardeImpossible;
 	public int deleteEmploye(int employeId) throws SauvegardeImpossible;
 	public int deleteLigue(int ligueId) throws SauvegardeImpossible;
+	
+	// Nouvelle méthode pour vérifier l'existence de l'utilisateur "root"
+    public boolean rootExiste() throws SauvegardeImpossible;
+    
 }

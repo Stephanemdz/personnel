@@ -236,7 +236,16 @@ public class LigueConsole
 	
 	private Option deleteEmploye(Employe employe)
 	{
-		return new Option("Supprimer", "d", () -> {employe.remove();});
+		return new Option("Supprimer l'employé", "d", () -> {
+	        if (demanderConfirmation("Êtes-vous sûr de vouloir supprimer l'employé " + employe.getNom() + " " + employe.getPrenom() + " ?")) {
+	            try {
+	                gestionPersonnel.deleteEmploye(employe.getId());
+	                System.out.println("Employé " + employe.getNom() + " " + employe.getPrenom() + " supprimé avec succès.");
+	            } catch (SauvegardeImpossible e) {
+	                System.err.println("Impossible de supprimer l'employé : " + e.getMessage());
+	            }
+	        }
+	    });
 	}
 	
 }
