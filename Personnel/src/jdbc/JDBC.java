@@ -62,7 +62,7 @@ public class JDBC implements Passerelle
 	            // Utilisation d'un Set pour éviter les doublons
 	            Set<Integer> employeIds = new HashSet<>();
 
-	            String requestEmployes = "SELECT compte_employe.*, ligue.nom AS ligue_nom FROM compte_employe INNER JOIN ligue ON compte_employe.ligue_id = ligue.id WHERE compte_employe.ligue_id = ?;";
+	            String requestEmployes = "SELECT * from compte_employe where ligue_id = ?;";
 	            PreparedStatement instructionEmployes = connection.prepareStatement(requestEmployes);
 	            instructionEmployes.setInt(1, ligueId);
 	            ResultSet employes = instructionEmployes.executeQuery();
@@ -80,7 +80,7 @@ public class JDBC implements Passerelle
 	                    LocalDate employeDateDepart = employes.getObject("dateDepart", LocalDate.class);
 
 	                    // Utilisation de la méthode addEmploye() existante
-	                    ligue.addEmploye(employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
+	                    ligue.addEmploye(employeId, employeNom, employePrenom, employeMail, employePassword, employeDateArrivee, employeDateDepart);
 
 	                    // Ajout de l'ID de l'employé au Set
 	                    employeIds.add(employeId);
@@ -91,21 +91,23 @@ public class JDBC implements Passerelle
 	        }
 
 	     // Récupérer les informations de root
-	        String requeteRoot = "SELECT * FROM compte_employe WHERE nom = 'root'";
+	        String requeteRoot = "SELECT * FROM compte_employe WHERE ligue_id IS NULL";
 	        Statement instructionRoot = connection.createStatement();
 	        ResultSet rootResult = instructionRoot.executeQuery(requeteRoot);
 
 	        if (rootResult.next()) {
+	        	System.out.println("J'ai trouvé le root");
 	            int id = rootResult.getInt("id");
 	            String nom = rootResult.getString("nom");
 	            String password = rootResult.getString("password");
 
-	            // Vérifier si root existe déjà
-	            if (gestionPersonnel.getRoot() == null) {
+	            // Vérifier si root existe déjà    
 	                gestionPersonnel.addRoot(id, nom, password);
-	            }
 	        }
-	    } catch (SQLException | SauvegardeImpossible e) {
+	        else {
+	        	System.out.println("J'ai pas trouvé le root");
+	        }
+	    } catch (SQLException e) {
 	        System.out.println(e);
 	    }
 	    return gestionPersonnel;

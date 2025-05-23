@@ -40,6 +40,14 @@ public class GestionPersonnel implements Serializable
 			gestionPersonnel = passerelle.getGestionPersonnel();
 			if (gestionPersonnel == null)
 				gestionPersonnel = new GestionPersonnel();
+			try {
+				if (gestionPersonnel.getRoot() == null) {
+					//Initialiser root seulement s'il n'existe pas
+					gestionPersonnel.addRoot("root", "root");
+				}	
+			} catch (SauvegardeImpossible e) {
+				e.printStackTrace();
+			}
 		}
 		return gestionPersonnel;
 	}
@@ -50,14 +58,6 @@ public class GestionPersonnel implements Serializable
 	        throw new RuntimeException("Vous ne pouvez créer qu'une seuls instance de cet objet.");
 	    ligues = new TreeSet<>();
 	    gestionPersonnel = this;
-	    try {
-	        // Vérifier si root existe déjà
-	        if (!passerelle.rootExiste()) {
-	            addRoot("root", "toor"); // Initialiser root seulement s'il n'existe pas
-	        }
-	    } catch (SauvegardeImpossible e) {
-	        e.printStackTrace();
-	    }
 	}
 	
 	public void sauvegarder() throws SauvegardeImpossible
@@ -162,7 +162,7 @@ public class GestionPersonnel implements Serializable
 	        this.root = employe;
 	}
 	public void addRoot( int id, String nom, String password){
-		 Employe employe = new Employe(this, id, null, nom, null, null, password, null, null);
+		 Employe employe = new Employe(this, null, id, nom, null, null, password, null, null);
 
 	        // Définir l'attribut root
 	        this.root = employe;

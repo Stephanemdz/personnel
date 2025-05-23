@@ -28,12 +28,12 @@ public class Employe implements Serializable, Comparable<Employe>
 	/*Surcharge constructeur por ajouter le root */
 	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
 	{
-		this(gestionPersonnel, -1, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
+		this(gestionPersonnel, ligue, -1, nom, prenom, mail, password, dateArrivee, dateDepart);
 		this.id = gestionPersonnel.insert(this); 
 	}
 	
 	
-	Employe(GestionPersonnel gestionPersonnel, int id, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -44,10 +44,7 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
 	}
-	
-	public static Employe creerEmploye(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible {
-	    return new Employe(gestionPersonnel, ligue, nom, prenom, mail, password, dateArrivee, dateDepart);
-	}
+
 	
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
