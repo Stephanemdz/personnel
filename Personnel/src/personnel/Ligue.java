@@ -68,13 +68,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
         }
 	}
 	
-	public void supprimerEmploye() {
-	    try {
-	        gestionPersonnel.deleteEmploye(this.getId());
-	    } catch (SauvegardeImpossible e) {
-	        e.printStackTrace();
-	    }
-	}
+
 
 	/**
 	 * Retourne l'administrateur de la ligue.
@@ -136,10 +130,19 @@ public class Ligue implements Serializable, Comparable<Ligue>
 		return employe;
 	}
 	
-	void remove(Employe employe)
-	{
-		employes.remove(employe);
-	}
+
+
+public void remove(Employe employe) throws SauvegardeImpossible {
+    if (!employes.contains(employe)) {
+        throw new IllegalArgumentException("L'employé n'appartient pas à cette ligue.");
+    }
+    GestionPersonnel.deleteEmploye(employe.getId());
+    employes.remove(employe);
+    employe.setDateDepart(LocalDate.now());
+    System.out.println("Employé supprimé avec succès.");
+}
+
+
 	
 	/**
 	 * Supprime la ligue, entraîne la suppression de tous les employés

@@ -200,7 +200,7 @@ public class LigueConsole
 	{
 			Menu menu = new Menu("Gérer le compte " + employe.getNom(), "c");
 			menu.add(employeConsole.editEmploye(employe));
-			menu.add(deleteEmploye(employe));
+			menu.add(supprimer(employe));
 			menu.addBack("q");
 			return menu;
 	}
@@ -232,14 +232,14 @@ public class LigueConsole
 	private boolean demanderConfirmation(String message) {
 	    String reponse = getString(message + " (o/n) : ");
 	    return reponse.equalsIgnoreCase("o");
-	}
+	} 
 	
-	private Option deleteEmploye(Employe employe)
+	private Option supprimer(Employe employe)
 	{
 		return new Option("Supprimer l'employé", "d", () -> {
 	        if (demanderConfirmation("Êtes-vous sûr de vouloir supprimer l'employé " + employe.getNom() + " " + employe.getPrenom() + " ?")) {
 	            try {
-	                gestionPersonnel.deleteEmploye(employe.getId());
+	                GestionPersonnel.deleteEmploye(employe.getId());
 	                System.out.println("Employé " + employe.getNom() + " " + employe.getPrenom() + " supprimé avec succès.");
 	            } catch (SauvegardeImpossible e) {
 	                System.err.println("Impossible de supprimer l'employé : " + e.getMessage());

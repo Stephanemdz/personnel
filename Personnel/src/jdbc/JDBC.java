@@ -15,7 +15,6 @@ import personnel.*;
 public class JDBC implements Passerelle 
 {
 	Connection connection;
-	private Ligue ligue;
 
 	public JDBC()
 	{
@@ -225,17 +224,20 @@ public class JDBC implements Passerelle
 	}
 	
 	//Méthode permettant de supprimer un employé de la base de données
-	public int deleteEmploye(int employeId) throws SauvegardeImpossible{
-		try {
-			PreparedStatement instruction;
-			instruction = connection.prepareStatement("DELETE FROM compte_employe WHERE id = ?");
-			instruction.setInt(1, employeId);
-			return instruction.executeUpdate();
-		} catch (SQLException exception) {
-			exception.printStackTrace();
-			throw new SauvegardeImpossible(exception);
-		}
-	}
+
+public int deleteEmploye(int employeId) throws SauvegardeImpossible {
+    try {
+        PreparedStatement instruction = connection.prepareStatement("DELETE FROM compte_employe WHERE id = ?");
+        instruction.setInt(1, employeId);
+
+        int rowsAffected = instruction.executeUpdate();
+        return rowsAffected;
+    } catch (SQLException exception) {
+        System.err.println("Erreur SQL : " + exception.getMessage());
+        throw new SauvegardeImpossible(exception);
+    }
+}
+
 	
 	public int deleteLigue(int ligueId) throws SauvegardeImpossible {
 	    try {

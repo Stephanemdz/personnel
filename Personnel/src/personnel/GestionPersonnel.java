@@ -35,6 +35,7 @@ public class GestionPersonnel implements Serializable
 	
 	public static GestionPersonnel getGestionPersonnel()
 	{
+		
 		if (gestionPersonnel == null)
 		{
 			gestionPersonnel = passerelle.getGestionPersonnel();
@@ -129,7 +130,7 @@ public class GestionPersonnel implements Serializable
 		return passerelle.update(employe);
 	}
 	
-	public int deleteEmploye(int employeId) throws SauvegardeImpossible
+	public static int deleteEmploye(int employeId) throws SauvegardeImpossible
 	{
 		return passerelle.deleteEmploye(employeId);
 	}

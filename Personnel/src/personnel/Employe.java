@@ -43,6 +43,7 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.ligue = ligue;
 		this.dateArrivee = dateArrivee;
 		this.dateDepart = dateDepart;
+		this.id = id;
 	}
 
 	
@@ -236,18 +237,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	 * récupère les droits d'administration sur sa ligue.
 	 */
 	
-	public void remove()
-	{
-		Employe root = gestionPersonnel.getRoot();
-		if (this != root)
+	 public void remove() throws SauvegardeImpossible
 		{
-			if (estAdmin(getLigue()))
-				getLigue().setAdministrateur(root);
-			getLigue().remove(this);
+			Employe root = gestionPersonnel.getRoot();
+			if (this != root)
+			{
+				if (estAdmin(getLigue()))
+					getLigue().setAdministrateur(root);
+				getLigue().remove(this);
+			}
+			else
+				throw new ImpossibleDeSupprimerRoot();
 		}
-		else
-			throw new ImpossibleDeSupprimerRoot();
-	}
 
 	@Override
 	public int compareTo(Employe autre)
@@ -279,7 +280,7 @@ public class Employe implements Serializable, Comparable<Employe>
 
 
 	public int getId() {
-		return id;
+	    return id;
 	}
 	 public void setId(int id) {
 	        this.id = id;
