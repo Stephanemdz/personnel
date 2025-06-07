@@ -37,9 +37,16 @@ public class LigueConsole
 		return menu;
 	}
 
-	private Option afficherLigues()
-	{
-		return new Option("Afficher les ligues", "l", () -> {System.out.println(gestionPersonnel.getLigues());});
+	private Option afficherLigues() {
+	    return new Option("Afficher les ligues", "l", () -> {
+	        gestionPersonnel.getLigues().forEach(ligue -> {
+	            Employe administrateur = ligue.getAdministrateur();
+	            String infoAdministrateur = (administrateur != null)
+	                ? "Administrateur: " + administrateur.getNom() + " " + administrateur.getPrenom()
+	                : "Aucun administrateur défini";
+	            System.out.println("Ligue: " + ligue.getNom() + " - " + infoAdministrateur);
+	        });
+	    });
 	}
 
 	private Option afficher(final Ligue ligue)

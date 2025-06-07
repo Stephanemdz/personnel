@@ -56,7 +56,8 @@ public class JDBC implements Passerelle
 	        while (ligues.next()) {
 	            int ligueId = ligues.getInt("id");
 	            String ligueNom = ligues.getString("nom");
-	            Ligue ligue = gestionPersonnel.addLigue(ligueId, ligueNom);
+	            int EmployeAdmin = ligues.getInt("employe_id");
+	            Ligue ligue = gestionPersonnel.addLigue(ligueId, ligueNom, EmployeAdmin);
 
 	            // Utilisation d'un Set pour éviter les doublons
 	            Set<Integer> employeIds = new HashSet<>();
@@ -108,7 +109,10 @@ public class JDBC implements Passerelle
 	        }
 	    } catch (SQLException e) {
 	        System.out.println(e);
-	    }
+	    } catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    return gestionPersonnel;
 	}
 

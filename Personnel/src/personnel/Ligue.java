@@ -30,11 +30,11 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	//Surcharge du Constructeur Ligue
 	Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
 	{
-		this(gestionPersonnel, -1, nom);
+		this(gestionPersonnel, -1, nom, -1);
 		this.id = gestionPersonnel.insert(this); 
 	}
 
-	Ligue(GestionPersonnel gestionPersonnel, int id, String nom)
+	Ligue(GestionPersonnel gestionPersonnel, int id, String nom, int employe_id)
 	{
 		this.nom = nom;
 		employes = new TreeSet<>();
@@ -88,12 +88,18 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * @param administrateur le nouvel administrateur de la ligue.
 	 */
 	
-	public void setAdministrateur(Employe administrateur)
-	{
-		Employe root = gestionPersonnel.getRoot();
-		if (administrateur != root && administrateur.getLigue() != this)
-			throw new DroitsInsuffisants();
-		this.administrateur = administrateur;
+	public void setAdministrateur(Employe administrateur) {
+	    Employe root = gestionPersonnel.getRoot();
+	    if (administrateur != root && administrateur.getLigue() != this) {
+	        throw new DroitsInsuffisants();
+	    }
+	    this.administrateur = administrateur;
+	    try {
+	        gestionPersonnel.update(this); // Sauvegarde des modifications dans la base de données
+	    } catch (SauvegardeImpossible e) {
+	        e.printStackTrace();
+	        System.err.println("Impossible de sauvegarder les modifications de l'administrateur dans la base de données.");
+	    }
 	}
 
 	/**

@@ -98,9 +98,9 @@ public class GestionPersonnel implements Serializable
 		return ligue;
 	}
 	
-	public Ligue addLigue(int id, String nom)
+	public Ligue addLigue(int id, String nom, int employe_id) throws SauvegardeImpossible
 	{
-		Ligue ligue = new Ligue(this, id, nom);
+		Ligue ligue = new Ligue(this, id, nom, employe_id);
 		ligues.add(ligue);
 		return ligue;
 	}
