@@ -56,7 +56,7 @@ public class JDBC implements Passerelle
 	        while (ligues.next()) {
 	            int ligueId = ligues.getInt("id");
 	            String ligueNom = ligues.getString("nom");
-	            int EmployeAdmin = ligues.getInt("employe_id");
+	            int EmployeAdmin = ligues.getInt("admin_ligue");
 	            Ligue ligue = gestionPersonnel.addLigue(ligueId, ligueNom, EmployeAdmin);
 
 	            // Utilisation d'un Set pour éviter les doublons
@@ -267,4 +267,26 @@ public int deleteEmploye(int employeId) throws SauvegardeImpossible {
             throw new SauvegardeImpossible(exception);
         }
     }
+
+	public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
+	    try {
+	        PreparedStatement instruction = connection.prepareStatement(
+	            "UPDATE ligue SET admin_ligue = ? WHERE id = ?"
+	        );
+	        if (ligue.getAdministrateur() == null) {
+	            instruction.setNull(1, java.sql.Types.INTEGER);
+	        } else {
+	            instruction.setInt(1, ligue.getAdministrateur().getId());
+	        }
+	        instruction.setInt(2, ligue.getId());
+
+	        int rowsAffected = instruction.executeUpdate();
+	        System.out.println("Administrateur mis à jour avec succès pour la ligue " + ligue.getNom() + ". Lignes affectées : " + rowsAffected);
+	        return rowsAffected;
+	    } catch (SQLException exception) {
+	        System.err.println("Erreur SQL lors de la mise à jour de l'administrateur : " + exception.getMessage());
+	        throw new SauvegardeImpossible(exception);
+	    }
+	}
+
 }

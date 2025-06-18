@@ -95,7 +95,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	    }
 	    this.administrateur = administrateur;
 	    try {
-	        gestionPersonnel.update(this); // Sauvegarde des modifications dans la base de données
+	        gestionPersonnel.updateAdministrateur(this); // Sauvegarde des modifications dans la base de données
 	    } catch (SauvegardeImpossible e) {
 	        e.printStackTrace();
 	        System.err.println("Impossible de sauvegarder les modifications de l'administrateur dans la base de données.");

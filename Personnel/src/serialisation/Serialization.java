@@ -77,4 +77,8 @@ public class Serialization implements personnel.Passerelle
 	{
 		return true;
 	}
+
+	public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
+		return -1;
+	}
 }

@@ -45,6 +45,7 @@ public class LigueConsole
 	                ? "Administrateur: " + administrateur.getNom() + " " + administrateur.getPrenom()
 	                : "Aucun administrateur défini";
 	            System.out.println("Ligue: " + ligue.getNom() + " - " + infoAdministrateur);
+	            System.out.println("Employés: " + ligue.getEmployes().size());
 	        });
 	    });
 	}
