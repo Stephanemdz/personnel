@@ -15,7 +15,6 @@ public interface Passerelle
 	public int deleteLigue(int ligueId) throws SauvegardeImpossible;
 	public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible;
 
-	public int getAdminLigue(Ligue ligue) throws SauvegardeImpossible, SQLException;
 	public String getAdminLigueNom(Ligue ligue) throws SauvegardeImpossible, SQLException;
 	
 	// Nouvelle méthode pour vérifier l'existence de l'utilisateur "root"

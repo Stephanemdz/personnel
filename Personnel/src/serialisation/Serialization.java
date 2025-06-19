@@ -83,9 +83,6 @@ public class Serialization implements personnel.Passerelle
 		return -1;
 	}
 
-	public int getAdminLigue(Ligue ligue) throws SQLException, SauvegardeImpossible {
-		return -1;
-	}
 
 	public String getAdminLigueNom(Ligue ligue) throws SQLException, SauvegardeImpossible {
 		return null;

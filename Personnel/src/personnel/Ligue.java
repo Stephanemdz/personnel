@@ -187,9 +187,7 @@ public void remove(Employe employe) throws SauvegardeImpossible {
 	        }
 	    }
 	 
-	 public int fetchAdministrateur() throws SQLException, SauvegardeImpossible {
-		    return gestionPersonnel.getAdminLigue(this);
-		}
+
 	 
 		public String fetchAdminNom() throws SQLException, SauvegardeImpossible {
 			return gestionPersonnel.getAdminLigueNom(this);

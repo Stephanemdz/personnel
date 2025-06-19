@@ -292,21 +292,7 @@ public int deleteEmploye(int employeId) throws SauvegardeImpossible {
 // methode pour recupérer l'admin dans la base de données et l'afficher sur la console. 
 	
 
-	public int getAdminLigue(Ligue ligue) throws SQLException {
-	    String query = "SELECT e.id " +
-	                   "FROM compte_employe e " +
-	                   "JOIN ligue l ON e.id = l.admin_ligue " +
-	                   "WHERE l.id = ?";
-	    try (PreparedStatement statement = connection.prepareStatement(query)) {
-	        statement.setInt(1, ligue.getId());
-	        try (ResultSet resultSet = statement.executeQuery()) {
-	            if (resultSet.next()) {
-	                return resultSet.getInt("id"); // Retourne l'ID de l'administrateur
-	            }
-	        }
-	    }
-	    return -1; // Aucun administrateur trouvé
-	}
+
 	
 
 public String getAdminLigueNom(Ligue ligue) throws SQLException {

@@ -57,23 +57,10 @@ private Option afficherLigues() {
 }
 
 
-	private Option afficher(final Ligue ligue)
-	{
-		return new Option("Afficher la ligue", "l", 
-				() -> 
-				{
-					System.out.println(ligue);
-					try {
-						System.out.println("administrée par " + ligue.fetchAdministrateur());
-					} catch (SQLException | SauvegardeImpossible e) {
-						e.printStackTrace();
-					}
-				}
-		);
-	}
+
 	private Option afficherNomAdmin(final Ligue ligue)
 	{
-		return new Option("Afficher la ligue admin nom", "p", 
+		return new Option("Afficher la ligue", "l", 
 				() -> 
 				{
 					System.out.println(ligue);
@@ -109,7 +96,6 @@ private Option afficherLigues() {
 	private Menu editerLigue(Ligue ligue)
     {
         Menu menu = new Menu("Editer " + ligue.getNom());
-        menu.add(afficher(ligue));
         menu.add(afficherNomAdmin(ligue));
         menu.add(gererEmployes(ligue));
         menu.add(changerAdministrateur(ligue));

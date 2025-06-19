@@ -145,9 +145,7 @@ public class GestionPersonnel implements Serializable
 		return passerelle.deleteLigue(ligueId);
 	}
 
-	public int getAdminLigue(Ligue ligue) throws SauvegardeImpossible, SQLException {
-		return passerelle.getAdminLigue(ligue);
-	}
+
 
 	public String getAdminLigueNom(Ligue ligue) throws SauvegardeImpossible, SQLException {
 		return passerelle.getAdminLigueNom(ligue);
