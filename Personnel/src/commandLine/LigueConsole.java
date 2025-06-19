@@ -213,13 +213,22 @@ public class LigueConsole
 			return menu;
 	}
 	
-	private List<Employe> changerAdministrateur(final Ligue ligue)
-	{
-		return new List<>("Changer l'administrateur", "i", 
-				() -> new ArrayList<>(ligue.getEmployes()),
-				(index, element) -> {ligue.setAdministrateur(element);}
-				);
-	}		
+
+	private List<Employe> changerAdministrateur(final Ligue ligue) {
+	    return new List<>("Changer l'administrateur", "i",
+	        () -> new ArrayList<>(ligue.getEmployes()),
+	        (index, element) -> {
+	            ligue.setAdministrateur(element); // Modification dans l'objet Ligue
+	            try {
+	                gestionPersonnel.updateAdministrateur(ligue); // Enregistrement dans la base de données
+	                System.out.println("Administrateur mis à jour avec succès pour la ligue " + ligue.getNom());
+	            } catch (SauvegardeImpossible e) {
+	                System.err.println("Erreur lors de la mise à jour de l'administrateur : " + e.getMessage());
+	            }
+	        }
+	    );
+	}
+		
 
 
 	
