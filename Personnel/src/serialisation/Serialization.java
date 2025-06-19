@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.SQLException;
 
 import personnel.Employe;
 import personnel.GestionPersonnel;
@@ -80,5 +81,13 @@ public class Serialization implements personnel.Passerelle
 
 	public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
 		return -1;
+	}
+
+	public int getAdminLigue(Ligue ligue) throws SQLException, SauvegardeImpossible {
+		return -1;
+	}
+
+	public String getAdminLigueNom(Ligue ligue) throws SQLException, SauvegardeImpossible {
+		return null;
 	}
 }

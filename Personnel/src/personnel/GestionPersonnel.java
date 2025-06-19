@@ -1,6 +1,7 @@
 package personnel;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.SortedSet;
@@ -144,6 +145,14 @@ public class GestionPersonnel implements Serializable
 		return passerelle.deleteLigue(ligueId);
 	}
 
+	public int getAdminLigue(Ligue ligue) throws SauvegardeImpossible, SQLException {
+		return passerelle.getAdminLigue(ligue);
+	}
+
+	public String getAdminLigueNom(Ligue ligue) throws SauvegardeImpossible, SQLException {
+		return passerelle.getAdminLigueNom(ligue);
+	}
+
 	/**
 	 * Retourne le root (super-utilisateur).
 	 * @return le root.
@@ -172,6 +181,9 @@ public class GestionPersonnel implements Serializable
 	        // Définir l'attribut root
 	        this.root = employe;
 	}
+
+
+	
 	
 	
 }

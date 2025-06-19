@@ -1,4 +1,5 @@
 package commandLine;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -37,18 +38,24 @@ public class LigueConsole
 		return menu;
 	}
 
-	private Option afficherLigues() {
-	    return new Option("Afficher les ligues", "l", () -> {
-	        gestionPersonnel.getLigues().forEach(ligue -> {
-	            Employe administrateur = ligue.getAdministrateur();
-	            String infoAdministrateur = (administrateur != null)
-	                ? "Administrateur: " + administrateur.getNom() + " " + administrateur.getPrenom()
-	                : "Aucun administrateur défini";
-	            System.out.println("Ligue: " + ligue.getNom() + " - " + infoAdministrateur);
-	            System.out.println("Employés: " + ligue.getEmployes().size());
-	        });
-	    });
-	}
+
+private Option afficherLigues() {
+    return new Option("Afficher les ligues", "l", () -> {
+        gestionPersonnel.getLigues().forEach(ligue -> {
+            try {
+                String adminNom = ligue.fetchAdminNom();
+                String infoAdministrateur = (adminNom != null)
+                    ? "Administrateur: " + adminNom
+                    : "Aucun administrateur défini";
+                System.out.println("Ligue: " + ligue.getNom() + " - " + infoAdministrateur);
+                System.out.println("Employés: " + ligue.getEmployes().size());
+            } catch (SQLException | SauvegardeImpossible e) {
+                System.err.println("Erreur lors de la récupération de l'administrateur : " + e.getMessage());
+            }
+        });
+    });
+}
+
 
 	private Option afficher(final Ligue ligue)
 	{
@@ -56,7 +63,25 @@ public class LigueConsole
 				() -> 
 				{
 					System.out.println(ligue);
-					System.out.println("administrée par " + ligue.getAdministrateur());
+					try {
+						System.out.println("administrée par " + ligue.fetchAdministrateur());
+					} catch (SQLException | SauvegardeImpossible e) {
+						e.printStackTrace();
+					}
+				}
+		);
+	}
+	private Option afficherNomAdmin(final Ligue ligue)
+	{
+		return new Option("Afficher la ligue admin nom", "p", 
+				() -> 
+				{
+					System.out.println(ligue);
+					try {
+						System.out.println("administrée par " + ligue.fetchAdminNom());
+					} catch (SQLException | SauvegardeImpossible e) {
+						e.printStackTrace();
+					}
 				}
 		);
 	}
@@ -85,6 +110,7 @@ public class LigueConsole
     {
         Menu menu = new Menu("Editer " + ligue.getNom());
         menu.add(afficher(ligue));
+        menu.add(afficherNomAdmin(ligue));
         menu.add(gererEmployes(ligue));
         menu.add(changerAdministrateur(ligue));
         menu.add(changerNom(ligue));

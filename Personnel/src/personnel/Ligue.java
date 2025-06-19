@@ -1,6 +1,7 @@
 package personnel;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.SortedSet;
@@ -185,5 +186,15 @@ public void remove(Employe employe) throws SauvegardeImpossible {
 	            e.printStackTrace(); 
 	        }
 	    }
+	 
+	 public int fetchAdministrateur() throws SQLException, SauvegardeImpossible {
+		    return gestionPersonnel.getAdminLigue(this);
+		}
+	 
+		public String fetchAdminNom() throws SQLException, SauvegardeImpossible {
+			return gestionPersonnel.getAdminLigueNom(this);
+		}
+
+	 
 
 }
