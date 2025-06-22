@@ -36,7 +36,8 @@ public class HomeFrame extends JFrame {
         // Bouton "Gérer les ligues"
         JButton buttonManageLigues = new JButton("Gérer les ligues");
         buttonManageLigues.addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(this, "Gestion des ligues non implémentée.");
+            LigueManagementFrame ligueManagementFrame = new LigueManagementFrame();
+            ligueManagementFrame.setVisible(true);
         });
 
         // Bouton "Quitter"

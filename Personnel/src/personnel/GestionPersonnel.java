@@ -106,7 +106,7 @@ public class GestionPersonnel implements Serializable
 		return ligue;
 	}
 
-	void remove(Ligue ligue)
+	public void remove(Ligue ligue)
 	{
 		ligues.remove(ligue);
 	}
