@@ -101,9 +101,40 @@ public class LigueManagementFrame extends JFrame {
 
 
         JButton buttonChangeAdmin = new JButton("Changer l'administrateur");
-        buttonChangeAdmin.addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(optionsFrame, "Changement d'administrateur non implémenté.", "Changer l'administrateur", JOptionPane.INFORMATION_MESSAGE);
-        });
+
+buttonChangeAdmin.addActionListener((ActionEvent e) -> {
+    String[] employeeNames = ligue.getEmployes().stream()
+        .map(employe -> employe.getNom() + " " + employe.getPrenom())
+        .toArray(String[]::new);
+
+    String selectedEmployee = (String) JOptionPane.showInputDialog(
+        optionsFrame,
+        "Sélectionnez un nouvel administrateur :",
+        "Changer l'administrateur",
+        JOptionPane.PLAIN_MESSAGE,
+        null,
+        employeeNames,
+        employeeNames.length > 0 ? employeeNames[0] : null
+    );
+
+    if (selectedEmployee != null) {
+        Employe newAdmin = ligue.getEmployes().stream()
+            .filter(employe -> (employe.getNom() + " " + employe.getPrenom()).equals(selectedEmployee))
+            .findFirst()
+            .orElse(null);
+
+        if (newAdmin != null) {
+            ligue.setAdministrateur(newAdmin);
+			JOptionPane.showMessageDialog(
+			    optionsFrame,
+			    "L'administrateur a été changé avec succès.",
+			    "Succès",
+			    JOptionPane.INFORMATION_MESSAGE
+			);
+        }
+    }
+});
+
 
         JButton buttonRename = new JButton("Renommer");
         buttonRename.addActionListener((ActionEvent e) -> {
