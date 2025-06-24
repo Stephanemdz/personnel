@@ -34,11 +34,15 @@ public class LigueManagementFrame extends JFrame {
 
         JButton buttonShowLigues = new JButton("Afficher les ligues");
         buttonShowLigues.addActionListener((ActionEvent e) -> {
-            StringBuilder liguesInfo = new StringBuilder();
-            gestionPersonnel.getLigues().forEach(ligue -> {
-                liguesInfo.append("Ligue: ").append(ligue.getNom()).append("\n");
-            });
-            JOptionPane.showMessageDialog(this, liguesInfo.toString(), "Liste des ligues", JOptionPane.INFORMATION_MESSAGE);
+        	    StringBuilder liguesInfo = new StringBuilder();
+        	    gestionPersonnel.getLigues().forEach(ligue -> {
+        	        Employe administrateur = ligue.getAdministrateur();
+        	        String adminInfo = (administrateur != null) 
+        	            ? "Administré par: " + administrateur.getNom() + " " + administrateur.getPrenom()
+        	            : "Aucun administrateur défini";
+        	        liguesInfo.append("Ligue: ").append(ligue.getNom()).append(" - ").append(adminInfo).append("\n");
+        	    });
+        	    JOptionPane.showMessageDialog(this, liguesInfo.toString(), "Liste des ligues", JOptionPane.INFORMATION_MESSAGE);
         });
 
         JButton buttonAddLigue = new JButton("Ajouter une ligue");
@@ -91,7 +95,11 @@ public class LigueManagementFrame extends JFrame {
 
         JButton buttonShowLigue = new JButton("Afficher la ligue");
         buttonShowLigue.addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(optionsFrame, "Ligue: " + ligue.getNom(), "Afficher la ligue", JOptionPane.INFORMATION_MESSAGE);
+        	Employe administrateur = ligue.getAdministrateur();
+            String adminInfo = (administrateur != null) 
+                ? "Administré par: " + administrateur.getNom() + " " + administrateur.getPrenom()
+                : "Aucun administrateur défini";
+            JOptionPane.showMessageDialog(optionsFrame, "Ligue: " + ligue.getNom() + " - " + adminInfo, "Afficher la ligue", JOptionPane.INFORMATION_MESSAGE);
         });
 
         JButton buttonManageEmployees = new JButton("Gérer les employés de " + ligue.getNom());
