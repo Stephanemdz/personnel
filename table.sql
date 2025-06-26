@@ -9,7 +9,7 @@ CREATE TABLE ligue (
 
 CREATE TABLE compte_employe (
     id INT(11) PRIMARY KEY AUTO_INCREMENT,
-    admin_ligue BOOLEAN DEFAULT FALSE,
+    is_admin BOOLEAN DEFAULT FALSE,
     nom VARCHAR(255) NOT NULL,
     prenom VARCHAR(255),
     email VARCHAR(250) UNIQUE,
