@@ -25,7 +25,7 @@ public class LoginFrame extends JFrame {
         panel.setLayout(new GridLayout(4, 2, 10, 10)); // Grille pour les composants
 
         // Ajout des composants
-        JLabel labelInfo = new JLabel("Connectez-vous à M2L"); // Texte fixe
+        JLabel labelInfo = new JLabel("Connectez-vous à M2L"); 
         labelInfo.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le texte
         JLabel labelUsername = new JLabel("Nom d'utilisateur:");
         JTextField textUsername = new JTextField();
@@ -40,7 +40,7 @@ public class LoginFrame extends JFrame {
         panel.add(textUsername);
         panel.add(labelPassword);
         panel.add(textPassword);
-        panel.add(new JLabel()); // Espace vide
+        panel.add(new JLabel()); 
         panel.add(buttonLogin);
 
         // Encapsulation du panneau principal avec un padding
@@ -63,18 +63,21 @@ buttonLogin.addActionListener(e -> {
 
         // Requête pour récupérer les informations du root
 
-		String query = "SELECT nom, password FROM compte_employe WHERE nom = ?";
+
+        String query = "SELECT id, is_admin, nom, password FROM compte_employe WHERE nom = ?";  // id rajouter pour être sur que cela lis bien l'id
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, username); // Utilisation du nom d'utilisateur saisi
 
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
+        	boolean is_admin = resultSet.getBoolean("is_admin");  // ajouter pour vérifier si c'est un admin
+        	int userId = resultSet.getInt("id");  // ajouter afin de vérifier que c'est l'user qu'on veut 
             String dbUsername = resultSet.getString("nom");
             String dbPassword = resultSet.getString("password");
 
             // Vérification des informations
-            if (username.equals(dbUsername) && password.equals(dbPassword)) {
+            if (username.equals(dbUsername) && password.equals(dbPassword ) && userId == 1 || is_admin == true) {  // permet au seul de se connecter
                 JOptionPane.showMessageDialog(LoginFrame.this, "Connexion réussie !");
                 new HomeFrame().setVisible(true); // Afficher la page d'accueil
                 dispose(); // Fermer la fenêtre de connexion
