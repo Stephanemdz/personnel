@@ -268,26 +268,45 @@ public int deleteEmploye(int employeId) throws SauvegardeImpossible {
         }
     }
 
-	public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
-	    try {
-	        PreparedStatement instruction = connection.prepareStatement(
-	            "UPDATE ligue SET admin_ligue = ? WHERE id = ?"
-	        );
-	        if (ligue.getAdministrateur() == null) {
-	            instruction.setNull(1, java.sql.Types.INTEGER);
-	        } else {
-	            instruction.setInt(1, ligue.getAdministrateur().getId());
-	        }
-	        instruction.setInt(2, ligue.getId());
 
-	        int rowsAffected = instruction.executeUpdate();
-	        System.out.println("Administrateur mis à jour avec succès pour la ligue " + ligue.getNom() + ". Lignes affectées : " + rowsAffected);
-	        return rowsAffected;
-	    } catch (SQLException exception) {
-	        System.err.println("Erreur SQL lors de la mise à jour de l'administrateur : " + exception.getMessage());
-	        throw new SauvegardeImpossible(exception);
-	    }
-	}
+public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
+    try {
+        // Mise à jour de l'administrateur dans la table ligue
+        PreparedStatement instruction = connection.prepareStatement(
+            "UPDATE ligue SET admin_ligue = ? WHERE id = ?"
+        );
+        if (ligue.getAdministrateur() == null) {
+            instruction.setNull(1, java.sql.Types.INTEGER);
+        } else {
+            instruction.setInt(1, ligue.getAdministrateur().getId());
+        }
+        instruction.setInt(2, ligue.getId());
+        int rowsAffected = instruction.executeUpdate();
+
+        // Mise à jour de la colonne is_admin dans la table compte_employe
+        if (ligue.getAdministrateur() != null) {
+            PreparedStatement updateAdminStatus = connection.prepareStatement(
+                "UPDATE compte_employe SET is_admin = true WHERE id = ?"
+            );
+            updateAdminStatus.setInt(1, ligue.getAdministrateur().getId());
+            updateAdminStatus.executeUpdate();
+        }
+
+        // Réinitialisation de is_admin pour les autres employés
+        PreparedStatement resetAdminStatus = connection.prepareStatement(
+            "UPDATE compte_employe SET is_admin = false WHERE id != ?"
+        );
+        resetAdminStatus.setInt(1, ligue.getAdministrateur() != null ? ligue.getAdministrateur().getId() : -1);
+        resetAdminStatus.executeUpdate();
+
+        System.out.println("Administrateur mis à jour avec succès pour la ligue " + ligue.getNom() + ". Lignes affectées : " + rowsAffected);
+        return rowsAffected;
+    } catch (SQLException exception) {
+        System.err.println("Erreur SQL lors de la mise à jour de l'administrateur : " + exception.getMessage());
+        throw new SauvegardeImpossible(exception);
+    }
+}
+
 	
 // methode pour recupérer l'admin dans la base de données et l'afficher sur la console. 
 	

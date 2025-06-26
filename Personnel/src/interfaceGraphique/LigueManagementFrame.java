@@ -9,6 +9,10 @@ import personnel.SauvegardeImpossible;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -93,19 +97,50 @@ public class LigueManagementFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 10));
 
-        JButton buttonShowLigue = new JButton("Afficher la ligue");
-        buttonShowLigue.addActionListener((ActionEvent e) -> {
-        	Employe administrateur = ligue.getAdministrateur();
-            String adminInfo = (administrateur != null) 
-                ? "Administré par: " + administrateur.getNom() + " " + administrateur.getPrenom()
-                : "Aucun administrateur défini";
-            JOptionPane.showMessageDialog(optionsFrame, "Ligue: " + ligue.getNom() + " - " + adminInfo, "Afficher la ligue", JOptionPane.INFORMATION_MESSAGE);
-        });
 
-        JButton buttonManageEmployees = new JButton("Gérer les employés de " + ligue.getNom());
-		buttonManageEmployees.addActionListener((ActionEvent e) -> {
-		    showEmployeeOptions(ligue);
-		});
+JButton buttonShowLigue = new JButton("Afficher la ligue");
+buttonShowLigue.addActionListener((ActionEvent e) -> {
+    try {
+        // Connexion à la base de données
+        String url = "jdbc:mysql://localhost:3306/m2l";
+        String user = "Admin";
+        String password = "root";
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        // Requête pour récupérer l'administrateur de la ligue
+        String query = "SELECT e.nom, e.prenom FROM compte_employe e " +
+                       "JOIN ligue l ON l.admin_ligue = e.id WHERE l.id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, ligue.getId()); // ID de la ligue
+
+        ResultSet resultSet = statement.executeQuery();
+        String adminInfo;
+        if (resultSet.next()) {
+            String adminNom = resultSet.getString("nom");
+            String adminPrenom = resultSet.getString("prenom");
+            adminInfo = "Administré par: " + adminNom + " " + adminPrenom;
+        } else {
+            adminInfo = "Aucun administrateur défini";
+        }
+
+        // Affichage des informations
+        JOptionPane.showMessageDialog(optionsFrame, "Ligue: " + ligue.getNom() + " - " + adminInfo, "Afficher la ligue", JOptionPane.INFORMATION_MESSAGE);
+
+        // Fermeture des ressources
+        resultSet.close();
+        statement.close();
+        connection.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(optionsFrame, "Erreur lors de la récupération des informations.", "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+});
+
+JButton buttonManageEmployees = new JButton("Gérer les employés de " + ligue.getNom());
+buttonManageEmployees.addActionListener((ActionEvent e) -> {
+    showEmployeeOptions(ligue);
+});
+
 
 
         JButton buttonChangeAdmin = new JButton("Changer l'administrateur");

@@ -166,26 +166,58 @@ public class RootManagementFrame extends JFrame {
 	}
 
 
-    private JPanel createChangeFirstNamePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = new JLabel("Nouveau prénom :");
-        JTextField firstNameField = new JTextField(20);
 
-        JButton btnSave = new JButton("Enregistrer");
-        btnSave.addActionListener(e -> {
-            // Logique pour enregistrer le nouveau prénom dans la base de données
-            JOptionPane.showMessageDialog(this, "Prénom modifié avec succès !");
-        });
+private JPanel createChangeFirstNamePanel() {
+    JPanel panel = new JPanel(new BorderLayout());
+    JLabel label = new JLabel("Nouveau prénom :");
+    JTextField firstNameField = new JTextField(20);
 
-        JButton btnBack = new JButton("Retour");
-        btnBack.addActionListener(e -> showPanel("Home"));
+    JButton btnSave = new JButton("Enregistrer");
+    btnSave.addActionListener(e -> {
+        String newFirstName = firstNameField.getText().trim();
+        if (!newFirstName.isEmpty()) {
+            try {
+                // Connexion à la base de données
+                String url = "jdbc:mysql://localhost:3306/m2l";
+                String user = "Admin";
+                String password = "root";
+                Connection connection = DriverManager.getConnection(url, user, password);
 
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(firstNameField, BorderLayout.CENTER);
-        panel.add(btnSave, BorderLayout.WEST);
-        panel.add(btnBack, BorderLayout.SOUTH);
-        return panel;
-    }
+                // Requête pour mettre à jour le prénom
+                String query = "UPDATE compte_employe SET prenom = ? WHERE id = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, newFirstName);
+                statement.setInt(2, 1); // Exemple : ID du root
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(this, "Prénom modifié avec succès !");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erreur : le prénom n'a pas été modifié.");
+                }
+
+                // Fermeture des ressources
+                statement.close();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erreur lors de la modification du prénom.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez entrer un prénom valide.");
+        }
+    });
+
+    JButton btnBack = new JButton("Retour");
+    btnBack.addActionListener(e -> showPanel("Home"));
+
+    panel.add(label, BorderLayout.NORTH);
+    panel.add(firstNameField, BorderLayout.CENTER);
+    panel.add(btnSave, BorderLayout.WEST);
+    panel.add(btnBack, BorderLayout.SOUTH);
+    return panel;
+}
+
 
 
 	private JPanel createChangeEmailPanel() {
@@ -258,7 +290,7 @@ private JPanel createChangePasswordPanel() {
                 Connection connection = DriverManager.getConnection(url, user, password);
 
                 // Requête pour mettre à jour le mot de passe du root
-                String query = "UPDATE compte_employe SET mot_de_passe = ? WHERE id = ?";
+                String query = "UPDATE compte_employe SET password = ? WHERE id = ?";
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, newPassword);
                 statement.setInt(2, 1); // Exemple : ID du root
