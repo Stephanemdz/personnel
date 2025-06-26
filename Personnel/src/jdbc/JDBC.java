@@ -269,6 +269,7 @@ public int deleteEmploye(int employeId) throws SauvegardeImpossible {
     }
 
 
+
 public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
     try {
         // Mise à jour de l'administrateur dans la table ligue
@@ -283,7 +284,7 @@ public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
         instruction.setInt(2, ligue.getId());
         int rowsAffected = instruction.executeUpdate();
 
-        // Mise à jour de la colonne is_admin dans la table compte_employe
+        // Mise à jour de la colonne is_admin pour l'administrateur de la ligue
         if (ligue.getAdministrateur() != null) {
             PreparedStatement updateAdminStatus = connection.prepareStatement(
                 "UPDATE compte_employe SET is_admin = true WHERE id = ?"
@@ -292,11 +293,12 @@ public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
             updateAdminStatus.executeUpdate();
         }
 
-        // Réinitialisation de is_admin pour les autres employés
+        // Réinitialisation de is_admin pour les autres employés de la même ligue
         PreparedStatement resetAdminStatus = connection.prepareStatement(
-            "UPDATE compte_employe SET is_admin = false WHERE id != ?"
+            "UPDATE compte_employe SET is_admin = false WHERE ligue_id = ? AND id != ?"
         );
-        resetAdminStatus.setInt(1, ligue.getAdministrateur() != null ? ligue.getAdministrateur().getId() : -1);
+        resetAdminStatus.setInt(1, ligue.getId());
+        resetAdminStatus.setInt(2, ligue.getAdministrateur() != null ? ligue.getAdministrateur().getId() : -1);
         resetAdminStatus.executeUpdate();
 
         System.out.println("Administrateur mis à jour avec succès pour la ligue " + ligue.getNom() + ". Lignes affectées : " + rowsAffected);
@@ -306,6 +308,7 @@ public int updateAdministrateur(Ligue ligue) throws SauvegardeImpossible {
         throw new SauvegardeImpossible(exception);
     }
 }
+
 
 	
 // methode pour recupérer l'admin dans la base de données et l'afficher sur la console. 
